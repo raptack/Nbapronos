@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NBA Playoffs 2026 — Pronos</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080810;
+  --card: #10101c;
+  --card2: #14141f;
+  --border: #1c1c2e;
+  --border2: #26263a;
+  --accent: #f7c744;
+  --red: #e84560;
+  --green: #2ecc71;
+  --blue: #4e9eff;
+  --text: #eeeef8;
+  --muted: #52526a;
+  --muted2: #8888a0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+/* ─── SCREENS ─── */
+.screen { display: none; min-height: 100vh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ─── LOGIN ─── */
+#screen-login {
+  align-items: center; justify-content: center; padding: 2rem 1rem;
+  background: radial-gradient(ellipse 70% 35% at 50% 0%, rgba(247,199,68,.07) 0%, transparent 60%);
+}
+.login-box { width: 100%; max-width: 400px; text-align: center; }
+.logo { font-family: 'Bebas Neue', sans-serif; font-size: 4.2rem; letter-spacing: 4px; line-height: 1; }
+.logo span { color: var(--accent); }
+.logo-sub { font-size: .68rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted2); margin-bottom: 2.5rem; margin-top: .2rem; }
+.sec-title { font-size: .62rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: .65rem; text-align: left; }
+.row { display: flex; gap: 8px; margin-bottom: 1.4rem; }
+input[type="text"] {
+  flex: 1; background: var(--card2); border: 1px solid var(--border2); border-radius: 8px;
+  padding: .65rem 1rem; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: .9rem; outline: none;
+  transition: border-color .15s;
+}
+input[type="text"]:focus { border-color: var(--accent); }
+input[type="text"]::placeholder { color: var(--muted); }
+.btn {
+  background: var(--accent); color: #08080f; border: none; border-radius: 8px;
+  padding: .65rem 1.2rem; font-family: 'Bebas Neue', sans-serif; font-size: 1rem;
+  letter-spacing: 2px; cursor: pointer; transition: background .15s, transform .1s; white-space: nowrap;
+}
+.btn:hover { background: #ffd966; transform: translateY(-1px); }
+.btn:disabled { background: var(--border2); color: var(--muted); cursor: not-allowed; transform: none; }
+.divider { display: flex; align-items: center; gap: .6rem; margin-bottom: 1.4rem; color: var(--muted); font-size: .68rem; letter-spacing: 2px; text-transform: uppercase; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
+.users-list { display: flex; flex-direction: column; gap: 5px; max-height: 220px; overflow-y: auto; padding-right: 2px; }
+.users-list::-webkit-scrollbar { width: 3px; }
+.users-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+.user-chip {
+  background: var(--card2); border: 1px solid var(--border2); border-radius: 8px;
+  padding: .6rem 1rem; display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; transition: border-color .15s, background .15s;
+  font-family: 'DM Sans', sans-serif; color: var(--text); font-size: .88rem; text-align: left;
+}
+.user-chip:hover { border-color: var(--accent); background: rgba(247,199,68,.04); }
+.chip-name { font-weight: 500; }
+.chip-meta { font-size: .68rem; color: var(--muted2); }
+.note { color: var(--muted2); font-size: .78rem; text-align: center; padding: .75rem; }
+
+/* ─── APP HEADER ─── */
+.app-header {
+  padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; background: rgba(8,8,16,.96);
+  backdrop-filter: blur(10px); z-index: 20;
+}
+.app-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 3px; }
+.app-logo span { color: var(--accent); }
+.user-pill { display: flex; align-items: center; gap: .45rem; }
+.avatar { width: 26px; height: 26px; background: var(--accent); color: #08080f; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: .85rem; }
+.uname { font-size: .8rem; color: var(--muted2); }
+.btn-sm { background: none; border: 1px solid var(--border2); color: var(--muted2); font-size: .62rem; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 5px; padding: .28rem .6rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: border-color .15s, color .15s; }
+.btn-sm:hover { border-color: var(--red); color: var(--red); }
+
+/* ─── CONTENT ─── */
+.app-content { flex: 1; max-width: 760px; margin: 0 auto; width: 100%; padding: 1.75rem 1.25rem 4rem; }
+
+/* ─── TABS ─── */
+.tabs { display: flex; gap: 4px; background: var(--card2); border: 1px solid var(--border); border-radius: 9px; padding: 3px; margin-bottom: 1.75rem; }
+.tab { flex: 1; background: transparent; border: none; color: var(--muted2); font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 500; padding: .5rem; border-radius: 7px; cursor: pointer; transition: background .15s, color .15s; }
+.tab.active { background: var(--border2); color: var(--text); }
+
+/* ─── SECTION LABEL ─── */
+.sec-label { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px; color: var(--accent); margin-bottom: .9rem; display: flex; align-items: center; gap: .6rem; }
+.sec-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--border2), transparent); }
+
+/* ─── SERIES BLOCK ─── */
+.series-block { margin-bottom: 2.25rem; }
+.series-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .75rem; }
+.series-name { font-size: .62rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted2); }
+.badge { font-size: .58rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; }
+.badge.live { background: rgba(232,69,96,.15); color: var(--red); }
+.badge.done { background: rgba(46,204,113,.1); color: var(--green); }
+.badge.soon { background: rgba(247,199,68,.1); color: var(--accent); }
+.live-dot { display: inline-block; width: 6px; height: 6px; background: var(--red); border-radius: 50%; animation: blink 1.2s infinite; margin-right: 4px; }
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:.15} }
+
+.series-scoreline { display: grid; grid-template-columns: 1fr auto 1fr; gap: .6rem; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1.1rem; margin-bottom: .75rem; }
+.t-block { display: flex; flex-direction: column; gap: 2px; }
+.t-block.right { text-align: right; }
+.t-abbr { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 1px; line-height: 1; }
+.t-abbr.lead { color: var(--accent); }
+.t-city { font-size: .68rem; color: var(--muted2); }
+.s-center { text-align: center; }
+.s-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 2px; }
+.s-lbl { font-size: .58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+
+/* ─── MATCH CARD ─── */
+.match-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  margin-bottom: .6rem; overflow: hidden; transition: border-color .2s;
+  position: relative;
+}
+.match-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+.match-card.past::before { background: var(--border2); }
+.match-card.next::before { background: var(--accent); }
+.match-card.upcoming::before { background: var(--border2); }
+
+.match-top { display: flex; align-items: center; justify-content: space-between; padding: .75rem 1rem .6rem; }
+.match-gnum { font-family: 'Bebas Neue', sans-serif; font-size: .8rem; letter-spacing: 2px; color: var(--muted2); }
+.match-result { font-size: .75rem; font-weight: 500; }
+.match-result .mw { color: var(--accent); }
+.match-result .ms { color: var(--muted2); margin-left: .3rem; font-size: .7rem; }
+.match-result.pending { color: var(--muted); font-style: italic; font-size: .72rem; }
+
+/* prono zone inside card */
+.match-prono { border-top: 1px solid var(--border); padding: .8rem 1rem; }
+.mp-label { font-size: .6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: .55rem; }
+.mp-picks { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: .75rem; }
+.pick-btn {
+  background: transparent; border: 1px solid var(--border2); border-radius: 7px;
+  padding: .5rem .75rem; color: var(--muted2); font-family: 'DM Sans', sans-serif;
+  font-size: .77rem; font-weight: 500; cursor: pointer; transition: all .15s; text-align: center;
+}
+.pick-btn:hover { border-color: var(--accent); color: var(--accent); }
+.pick-btn.sel { background: rgba(247,199,68,.1); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.range-row { margin-bottom: .75rem; }
+.range-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .4rem; }
+.range-val { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: var(--accent); letter-spacing: 1px; }
+input[type="range"] {
+  -webkit-appearance: none; width: 100%; height: 3px;
+  background: var(--border2); border-radius: 3px; outline: none; margin-bottom: 3px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px;
+  background: var(--accent); border-radius: 50%; cursor: pointer;
+}
+.range-ends { display: flex; justify-content: space-between; font-size: .58rem; color: var(--muted); }
+.submit-row { display: flex; align-items: center; justify-content: flex-end; gap: .65rem; }
+.flash { font-size: .68rem; color: var(--green); letter-spacing: 1px; opacity: 0; transition: opacity .3s; }
+.flash.show { opacity: 1; }
+
+/* prono locked display */
+.prono-view { border-top: 1px solid var(--border); padding: .7rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+.pv-pick { font-size: .8rem; font-weight: 600; }
+.pv-pick.correct { color: var(--green); }
+.pv-pick.wrong { color: var(--red); }
+.pv-pick.pending { color: var(--accent); }
+.pv-detail { font-size: .68rem; color: var(--muted2); }
+.pv-icon { font-size: .9rem; }
+
+/* others pronos table */
+.others-block { margin-top: .5rem; border-top: 1px solid var(--border); }
+.others-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .5rem 1rem; border-bottom: 1px solid var(--border); font-size: .78rem;
+}
+.others-row:last-child { border-bottom: none; }
+.or-name { color: var(--muted2); font-size: .72rem; }
+.or-pick { font-weight: 500; }
+.or-pick.correct { color: var(--green); }
+.or-pick.wrong { color: var(--red); }
+.or-pick.pending { color: var(--text); }
+.or-diff { font-size: .68rem; color: var(--muted); }
+
+/* ─── LEADERBOARD ─── */
+.lb-info { background: var(--card); border: 1px solid var(--border); border-radius: 9px; padding: .9rem 1.1rem; margin-bottom: 1.5rem; font-size: .77rem; color: var(--muted2); line-height: 1.6; }
+.lb-info strong { color: var(--text); }
+.lb-table { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.lb-head { display: grid; grid-template-columns: 36px 1fr 50px 50px; padding: .55rem 1.1rem; font-size: .6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
+.lb-row { display: grid; grid-template-columns: 36px 1fr 50px 50px; padding: .75rem 1.1rem; border-bottom: 1px solid var(--border); align-items: center; font-size: .83rem; }
+.lb-row:last-child { border-bottom: none; }
+.lb-row.me { background: rgba(247,199,68,.04); }
+.lb-rank { font-family: 'Bebas Neue', sans-serif; font-size: .95rem; color: var(--muted); }
+.lb-rank.top { color: var(--accent); }
+.lb-name { font-weight: 500; }
+.lb-c { text-align: right; color: var(--muted2); font-size: .75rem; }
+.lb-c.pts { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; color: var(--text); }
+.lb-empty { text-align: center; color: var(--muted); padding: 2rem; font-size: .83rem; }
+
+/* ─── TOAST ─── */
+.toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--card2); border: 1px solid var(--border2); border-radius: 7px; padding: .6rem 1.2rem; font-size: .8rem; z-index: 100; transition: transform .3s; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media(max-width:480px) {
+  .logo { font-size: 3.2rem; }
+  .t-abbr { font-size: 1.4rem; }
+  .lb-head, .lb-row { grid-template-columns: 30px 1fr 45px 45px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="screen-login" class="screen active">
+  <div class="login-box">
+    <div class="logo">NBA <span>PRONOS</span></div>
+    <div class="logo-sub">Playoffs 2026</div>
+
+    <div class="sec-title">Nouveau joueur</div>
+    <div class="row">
+      <input type="text" id="inp-pseudo" placeholder="Ton pseudo…" maxlength="20" autocomplete="off">
+      <button class="btn" onclick="loginNew()">GO</button>
+    </div>
+
+    <div class="divider">ou rejoindre</div>
+
+    <div class="sec-title">Joueurs existants</div>
+    <div class="users-list" id="users-list">
+      <div class="note"><span class="spinner"></span> Chargement…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ APP ══════════ -->
+<div id="screen-app" class="screen">
+  <div class="app-header">
+    <div class="app-logo">NBA <span>PRONOS</span></div>
+    <div class="user-pill">
+      <div class="avatar" id="hdr-av">?</div>
+      <span class="uname" id="hdr-name">—</span>
+      <button class="btn-sm" onclick="logout()">Changer</button>
+    </div>
+  </div>
+
+  <div class="app-content">
+    <div class="tabs">
+      <button class="tab active" onclick="setTab('pronos',this)">🏀 Mes Paris</button>
+      <button class="tab" onclick="setTab('board',this)">🏆 Classement</button>
+    </div>
+
+    <div id="tab-pronos">
+      <div id="pronos-container"><div style="text-align:center;padding:3rem"><span class="spinner"></span></div></div>
+    </div>
+
+    <div id="tab-board" style="display:none">
+      <div class="lb-info">
+        <strong>Points :</strong> +3 pts vainqueur correct · +2 pts si écart ±3 pts · +1 pt si écart ±7 pts
+      </div>
+      <div id="lb-container"><div class="lb-table"><div class="lb-empty"><span class="spinner"></span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════
+const BIN_ID  = '6a0f5f876877513b27aed9f3';
+const BIN_KEY = '$2a$10$qHs/E9l5SuCFpgM5hOBjnuncSRnjo6psyEDp5mO3m53pNQaDGbB.q';
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+// ══════════════════════════════════════════
+//  NBA DATA  — données initiales codées en dur
+//  puis enrichies depuis l'API au chargement
+// ══════════════════════════════════════════
+// Chaque série contient une liste de matchs joués et le prochain match à parier
+// Structure match : { id, gameNum, team1, team2, winner(null=pas encore joué), score1, score2 }
+
+const SERIES_INIT = [
+  {
+    id: 'east-finals',
+    label: 'Finale de Conférence Est',
+    team1: { abbr: 'NYK', name: 'New York Knicks' },
+    team2: { abbr: 'CLE', name: 'Cleveland Cavaliers' },
+    wins1: 1, wins2: 0,
+    done: false,
+    seriesWinner: null,
+    matches: [
+      { id: 'east-g1', num: 1, winner: 'NYK', score1: 115, score2: 104 },
+    ],
+    nextGame: 2,
+  },
+  {
+    id: 'west-finals',
+    label: 'Finale de Conférence Ouest',
+    team1: { abbr: 'OKC', name: 'Oklahoma City Thunder' },
+    team2: { abbr: 'SAS', name: 'San Antonio Spurs' },
+    wins1: 1, wins2: 1,
+    done: false,
+    seriesWinner: null,
+    matches: [
+      { id: 'west-g1', num: 1, winner: 'SAS', score1: 115, score2: 122 },
+      { id: 'west-g2', num: 2, winner: 'OKC', score1: 122, score2: 113 },
+    ],
+    nextGame: 3,
+  },
+  {
+    id: 'nba-finals',
+    label: 'NBA Finals 2026',
+    team1: { abbr: '???', name: 'Champion Est' },
+    team2: { abbr: '???', name: 'Champion Ouest' },
+    wins1: 0, wins2: 0,
+    done: false,
+    seriesWinner: null,
+    matches: [],
+    nextGame: 1,
+  },
+];
+
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let currentUser = null;
+let db = { users: {}, pronos: {} };
+// pronos[uid][matchId] = { winner: 'NYK'|'CLE', diff: 8 }
+let SERIES = JSON.parse(JSON.stringify(SERIES_INIT));
+
+// ══════════════════════════════════════════
+//  JSONBIN
+// ══════════════════════════════════════════
+async function dbRead() {
+  try {
+    const r = await fetch(BIN_URL + '/latest', {
+      headers: { 'X-Master-Key': BIN_KEY, 'X-Bin-Meta': 'false' }
+    });
+    if (!r.ok) throw new Error(r.status);
+    const data = await r.json();
+    if (data && data.users) db = data;
+  } catch(e) { console.warn('dbRead', e); }
+}
+
+async function dbWrite() {
+  try {
+    const r = await fetch(BIN_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': BIN_KEY },
+      body: JSON.stringify(db),
+    });
+    if (!r.ok) throw new Error(r.status);
+  } catch(e) { toast('⚠️ Erreur de sauvegarde'); console.warn('dbWrite', e); }
+}
+
+// ══════════════════════════════════════════
+//  NBA LIVE DATA  (balldontlie — clé gratuite)
+//  On fetche au chargement uniquement
+// ══════════════════════════════════════════
+async function fetchNBAResults() {
+  // On utilise l'API publique de balldontlie v1 avec clé gratuite
+  // endpoint: GET /games?seasons[]=2025&postseason=true&per_page=100
+  // Si la clé n'est pas dispo on reste sur les données codées en dur
+  try {
+    const r = await fetch('https://api.balldontlie.io/v1/games?seasons[]=2025&postseason=true&per_page=100', {
+      headers: { 'Authorization': 'live-data-optional' }
+    });
+    // Si 401/403 on ignore silencieusement, les données codées en dur sont déjà à jour
+    if (!r.ok) return;
+    const data = await r.json();
+    applyLiveData(data.data || []);
+  } catch(e) {
+    // Réseau ou CORS → on reste sur les données initiales, aucun souci
+  }
+}
+
+function applyLiveData(games) {
+  // Mappe les données API sur nos séries (equipes identifiées par abbreviation)
+  const abbrevMap = {
+    'New York Knicks': 'NYK', 'Cleveland Cavaliers': 'CLE',
+    'Oklahoma City Thunder': 'OKC', 'San Antonio Spurs': 'SAS',
+  };
+
+  games.forEach(g => {
+    const t1 = abbrevMap[g.home_team?.full_name];
+    const t2 = abbrevMap[g.visitor_team?.full_name];
+    if (!t1 || !t2) return;
+    const score1 = g.home_team_score, score2 = g.visitor_team_score;
+    if (!score1 && !score2) return; // match pas encore joué ou données manquantes
+
+    const series = SERIES.find(s =>
+      (s.team1.abbr === t1 && s.team2.abbr === t2) ||
+      (s.team1.abbr === t2 && s.team2.abbr === t1)
+    );
+    if (!series) return;
+
+    // Reconstruit la liste des matchs joués depuis l'API
+    // (on repart de zéro pour éviter les doublons)
+    const flipped = series.team1.abbr === t2; // équipe visiteuse = team1 dans notre modèle
+    const s1 = flipped ? score2 : score1;
+    const s2 = flipped ? score1 : score2;
+    const gameNum = parseInt(g.postseason?.game || 0) || series.matches.length + 1;
+    const winner = s1 > s2 ? series.team1.abbr : series.team2.abbr;
+
+    const existing = series.matches.find(m => m.num === gameNum);
+    if (!existing) {
+      series.matches.push({ id: series.id + '-g' + gameNum, num: gameNum, winner, score1: s1, score2: s2 });
+    }
+  });
+
+  // Recalcule wins et nextGame pour chaque série
+  SERIES.forEach(s => {
+    s.wins1 = s.matches.filter(m => m.winner === s.team1.abbr).length;
+    s.wins2 = s.matches.filter(m => m.winner === s.team2.abbr).length;
+    if (s.wins1 >= 4) { s.done = true; s.seriesWinner = s.team1.abbr; }
+    else if (s.wins2 >= 4) { s.done = true; s.seriesWinner = s.team2.abbr; }
+    else { s.nextGame = s.matches.length + 1; }
+  });
+
+  updateFinalsTeams();
+}
+
+function updateFinalsTeams() {
+  const finals = SERIES.find(s => s.id === 'nba-finals');
+  if (!finals || finals.done) return;
+  const east = SERIES.find(s => s.id === 'east-finals');
+  const west = SERIES.find(s => s.id === 'west-finals');
+  if (east?.seriesWinner) {
+    const w = east.seriesWinner === east.team1.abbr ? east.team1 : east.team2;
+    finals.team1 = { ...w };
+  }
+  if (west?.seriesWinner) {
+    const w = west.seriesWinner === west.team1.abbr ? west.team1 : west.team2;
+    finals.team2 = { ...w };
+  }
+}
+
+// ══════════════════════════════════════════
+//  LOGIN
+// ══════════════════════════════════════════
+async function initLogin() {
+  await dbRead();
+  await fetchNBAResults(); // chargement unique au démarrage
+  renderUsersList();
+}
+
+function renderUsersList() {
+  const el = document.getElementById('users-list');
+  const ids = Object.keys(db.users || {});
+  if (!ids.length) {
+    el.innerHTML = '<div class="note">Aucun joueur encore — sois le premier !</div>';
+    return;
+  }
+  el.innerHTML = ids.map(uid => {
+    const u = db.users[uid];
+    const n = Object.keys(db.pronos?.[uid] || {}).length;
+    return `<button class="user-chip" onclick="loginExisting('${uid}')">
+      <span class="chip-name">${esc(u.name)}</span>
+      <span class="chip-meta">${n} pari${n>1?'s':''}</span>
+    </button>`;
+  }).join('');
+}
+
+function loginNew() {
+  const name = document.getElementById('inp-pseudo').value.trim();
+  if (name.length < 2) { toast('Pseudo trop court'); return; }
+  const dup = Object.values(db.users||{}).find(u => u.name.toLowerCase() === name.toLowerCase());
+  if (dup) { toast('Pseudo déjà pris, sélectionne-le ci-dessous'); return; }
+  const uid = 'u' + Date.now();
+  if (!db.users) db.users = {};
+  if (!db.pronos) db.pronos = {};
+  db.users[uid] = { name, ts: Date.now() };
+  db.pronos[uid] = {};
+  dbWrite();
+  enterApp(uid);
+}
+
+function loginExisting(uid) {
+  if (!db.users[uid]) return;
+  enterApp(uid);
+}
+
+function enterApp(uid) {
+  currentUser = uid;
+  const name = db.users[uid].name;
+  document.getElementById('hdr-name').textContent = name;
+  document.getElementById('hdr-av').textContent = name[0].toUpperCase();
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+  renderPronosTab();
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById('screen-app').classList.remove('active');
+  document.getElementById('screen-login').classList.add('active');
+  document.getElementById('inp-pseudo').value = '';
+  renderUsersList();
+}
+
+// ══════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════
+function setTab(tab, btn) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-pronos').style.display = tab === 'pronos' ? 'block' : 'none';
+  document.getElementById('tab-board').style.display  = tab === 'board'  ? 'block' : 'none';
+  if (tab === 'board') renderLeaderboard();
+}
+
+// ══════════════════════════════════════════
+//  PRONOS TAB
+// ══════════════════════════════════════════
+function renderPronosTab() {
+  const myPronos = db.pronos[currentUser] || {};
+  let html = '';
+
+  SERIES.forEach(s => {
+    // Série terminée → on ne montre rien (pas de pari possible)
+    if (s.done) return;
+
+    // NBA Finals pas encore accessibles (équipes inconnues)
+    const teamsUnknown = s.team1.abbr === '???' || s.team2.abbr === '???';
+
+    const lead1 = s.wins1 > s.wins2, lead2 = s.wins2 > s.wins1;
+    const statusBadge = s.done
+      ? `<span class="badge done">✓ Terminé</span>`
+      : teamsUnknown
+        ? `<span class="badge soon">À venir</span>`
+        : `<span class="badge live"><span class="live-dot"></span>En cours</span>`;
+
+    // Score de série
+    const scoreBlock = `
+      <div class="series-scoreline">
+        <div class="t-block">
+          <div class="t-abbr ${lead1?'lead':''}">${s.team1.abbr}</div>
+          <div class="t-city">${s.team1.name}</div>
+        </div>
+        <div class="s-center">
+          <div class="s-score">${s.wins1}–${s.wins2}</div>
+          <div class="s-lbl">Série</div>
+        </div>
+        <div class="t-block right">
+          <div class="t-abbr ${lead2?'lead':''}">${s.team2.abbr}</div>
+          <div class="t-city">${s.team2.name}</div>
+        </div>
+      </div>`;
+
+    // Matchs passés
+    let matchesHtml = '';
+    s.matches.forEach(m => {
+      const wName = m.winner === s.team1.abbr ? s.team1.name : s.team2.name;
+      const diff = Math.abs(m.score1 - m.score2);
+      matchesHtml += `
+        <div class="match-card past">
+          <div class="match-top">
+            <span class="match-gnum">MATCH ${m.num}</span>
+            <span class="match-result">
+              <span class="mw">${wName}</span>
+              <span class="ms">${Math.max(m.score1,m.score2)}–${Math.min(m.score1,m.score2)}</span>
+            </span>
+          </div>
+          ${renderPastProno(s, m, myPronos)}
+        </div>`;
+    });
+
+    // Prochain match à parier (si équipes connues)
+    let nextHtml = '';
+    if (!teamsUnknown) {
+      const matchKey = `${s.id}-g${s.nextGame}`;
+      const myP = myPronos[matchKey];
+      const othersHtml = renderOthersPronos(s, matchKey, myP);
+
+      if (myP) {
+        // Déjà parié → affiche mon prono + pronos des autres
+        nextHtml = `
+          <div class="match-card next">
+            <div class="match-top">
+              <span class="match-gnum">MATCH ${s.nextGame} <span style="color:var(--accent);font-size:.58rem;margin-left:4px">PROCHAIN</span></span>
+              <span class="match-result pending">À jouer</span>
+            </div>
+            <div class="prono-view">
+              <div>
+                <div class="pv-pick pending">📌 ${myP.winner === s.team1.abbr ? s.team1.name : s.team2.name}</div>
+                <div class="pv-detail">± ${myP.diff} pts · verrouillé</div>
+              </div>
+              <div class="pv-icon">🔒</div>
+            </div>
+            ${othersHtml}
+          </div>`;
+      } else {
+        // Formulaire
+        nextHtml = `
+          <div class="match-card next">
+            <div class="match-top">
+              <span class="match-gnum">MATCH ${s.nextGame} <span style="color:var(--accent);font-size:.58rem;margin-left:4px">PROCHAIN</span></span>
+              <span class="match-result pending">À jouer — fais ton pari !</span>
+            </div>
+            <div class="match-prono">
+              <div class="mp-label">Qui va gagner ?</div>
+              <div class="mp-picks">
+                <button class="pick-btn" id="pb-${matchKey}-${s.team1.abbr}" onclick="pickW('${matchKey}','${s.team1.abbr}',this)">${s.team1.name}</button>
+                <button class="pick-btn" id="pb-${matchKey}-${s.team2.abbr}" onclick="pickW('${matchKey}','${s.team2.abbr}',this)">${s.team2.name}</button>
+              </div>
+              <div class="range-row">
+                <div class="range-header">
+                  <span class="mp-label" style="margin:0">Écart de points</span>
+                  <span class="range-val" id="rv-${matchKey}">± 8 pts</span>
+                </div>
+                <input type="range" min="1" max="35" value="8" id="rng-${matchKey}"
+                  oninput="document.getElementById('rv-${matchKey}').textContent='± '+this.value+' pts'">
+                <div class="range-ends"><span>1 pt</span><span>35 pts</span></div>
+              </div>
+              <div class="submit-row">
+                <span class="flash" id="fl-${matchKey}">✓ Enregistré !</span>
+                <button class="btn" onclick="submitBet('${s.id}','${matchKey}')">VALIDER</button>
+              </div>
+            </div>
+          </div>`;
+      }
+    } else {
+      nextHtml = `
+        <div class="match-card upcoming">
+          <div class="match-top">
+            <span class="match-gnum">Match 1</span>
+            <span class="match-result pending">Les équipes finalistes ne sont pas encore connues</span>
+          </div>
+        </div>`;
+    }
+
+    html += `
+      <div class="series-block">
+        <div class="series-header">
+          <span class="series-name">${s.label}</span>
+          ${statusBadge}
+        </div>
+        ${scoreBlock}
+        ${matchesHtml}
+        ${nextHtml}
+      </div>`;
+  });
+
+  // Si toutes les séries sont terminées
+  if (!html) {
+    html = '<div style="text-align:center;color:var(--muted2);padding:3rem;font-size:.88rem">🏆 Toutes les séries sont terminées !</div>';
+  }
+
+  document.getElementById('pronos-container').innerHTML = html;
+}
+
+// Affiche mon prono sur un match passé (avec résultat)
+function renderPastProno(s, m, myPronos) {
+  const matchKey = `${s.id}-g${m.num}`;
+  const p = myPronos[matchKey];
+  if (!p) return '';
+  const correct = p.winner === m.winner;
+  const actualDiff = Math.abs(m.score1 - m.score2);
+  const diffOk = Math.abs(p.diff - actualDiff) <= 3 ? 'exact' : Math.abs(p.diff - actualDiff) <= 7 ? 'proche' : '';
+  return `<div class="prono-view">
+    <div>
+      <div class="pv-pick ${correct?'correct':'wrong'}">${correct?'✓':'✗'} ${p.winner === s.team1.abbr ? s.team1.name : s.team2.name}</div>
+      <div class="pv-detail">Prédit ± ${p.diff} pts · Réel ${actualDiff} pts ${diffOk==='exact'?'🎯':diffOk==='proche'?'👍':''}</div>
+    </div>
+    <div class="pv-icon">${correct?'🎯':'💀'}</div>
+  </div>`;
+}
+
+// Affiche les pronos des autres sur le prochain match (visible seulement si j'ai parié)
+function renderOthersPronos(s, matchKey, myProno) {
+  if (!myProno) return '';
+  const others = Object.keys(db.users)
+    .filter(uid => uid !== currentUser)
+    .map(uid => ({ uid, name: db.users[uid].name, p: (db.pronos[uid]||{})[matchKey] }))
+    .filter(u => u.p);
+
+  if (!others.length) return `<div style="padding:.6rem 1rem;font-size:.7rem;color:var(--muted)">Aucun autre joueur n'a encore parié.</div>`;
+
+  const rows = others.map(u => `
+    <div class="others-row">
+      <span class="or-name">${esc(u.name)}</span>
+      <span class="or-pick pending">${u.p.winner === s.team1.abbr ? s.team1.name : s.team2.name}</span>
+      <span class="or-diff">± ${u.p.diff} pts</span>
+    </div>`).join('');
+
+  return `<div class="others-block">${rows}</div>`;
+}
+
+// ══════════════════════════════════════════
+//  BET ACTIONS
+// ══════════════════════════════════════════
+const formState = {};
+
+function pickW(matchKey, team, btn) {
+  if (!formState[matchKey]) formState[matchKey] = {};
+  formState[matchKey].winner = team;
+  // reset tous les boutons de ce match
+  document.querySelectorAll(`[id^="pb-${matchKey}-"]`).forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+async function submitBet(seriesId, matchKey) {
+  const f = formState[matchKey] || {};
+  if (!f.winner) { toast('Choisis un vainqueur !'); return; }
+  const diff = parseInt(document.getElementById('rng-' + matchKey)?.value || 8);
+  if (!db.pronos[currentUser]) db.pronos[currentUser] = {};
+  db.pronos[currentUser][matchKey] = { winner: f.winner, diff, ts: Date.now() };
+  await dbWrite();
+  // flash puis re-render
+  const fl = document.getElementById('fl-' + matchKey);
+  if (fl) { fl.classList.add('show'); }
+  setTimeout(() => renderPronosTab(), 400);
+}
+
+// ══════════════════════════════════════════
+//  LEADERBOARD
+// ══════════════════════════════════════════
+function calcScore(uid) {
+  let pts = 0;
+  const up = db.pronos[uid] || {};
+  SERIES.forEach(s => {
+    s.matches.forEach(m => {
+      const key = `${s.id}-g${m.num}`;
+      const p = up[key];
+      if (!p) return;
+      if (p.winner === m.winner) {
+        pts += 3;
+        const actual = Math.abs(m.score1 - m.score2);
+        const d = Math.abs(p.diff - actual);
+        if (d <= 3) pts += 2;
+        else if (d <= 7) pts += 1;
+      }
+    });
+  });
+  return pts;
+}
+
+function renderLeaderboard() {
+  const users = Object.keys(db.users || {}).map(uid => ({
+    uid,
+    name: db.users[uid].name,
+    pts: calcScore(uid),
+    bets: Object.keys(db.pronos[uid] || {}).length,
+  })).sort((a,b) => b.pts - a.pts || b.bets - a.bets);
+
+  const el = document.getElementById('lb-container');
+  if (!users.length) {
+    el.innerHTML = '<div class="lb-table"><div class="lb-empty">Aucun joueur.</div></div>';
+    return;
+  }
+
+  const rows = users.map((u,i) => `
+    <div class="lb-row ${u.uid===currentUser?'me':''}">
+      <div class="lb-rank ${i<3?'top':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+      <div class="lb-name">${esc(u.name)}${u.uid===currentUser?' <span style="color:var(--muted);font-size:.7rem">(moi)</span>':''}</div>
+      <div class="lb-c">${u.bets}</div>
+      <div class="lb-c pts">${u.pts}</div>
+    </div>`).join('');
+
+  el.innerHTML = `<div class="lb-table">
+    <div class="lb-head"><div>#</div><div>Joueur</div><div>Paris</div><div>Pts</div></div>
+    ${rows}
+  </div>`;
+}
+
+// ══════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ══════════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════════
+document.getElementById('inp-pseudo').addEventListener('keydown', e => { if(e.key==='Enter') loginNew(); });
+initLogin();
+</script>
+</body>
+</html>
