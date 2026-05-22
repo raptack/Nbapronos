@@ -199,6 +199,79 @@ input[type="range"]::-webkit-slider-thumb {
 .lb-c.pts { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; color: var(--text); }
 .lb-empty { text-align: center; color: var(--muted); padding: 2rem; font-size: .83rem; }
 
+
+/* ─── DETAIL DRAWER ─── */
+.drawer-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  backdrop-filter: blur(4px); z-index: 50; align-items: flex-end; justify-content: center;
+}
+.drawer-overlay.open { display: flex; }
+.drawer {
+  background: #0f0f1c; border: 1px solid var(--border2); border-radius: 16px 16px 0 0;
+  width: 100%; max-width: 760px; max-height: 85vh; overflow-y: auto;
+  padding: 0 0 2rem; transform: translateY(100%); transition: transform .3s ease;
+}
+.drawer-overlay.open .drawer { transform: translateY(0); }
+.drawer::-webkit-scrollbar { width: 3px; }
+.drawer::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+.drawer-handle { width: 36px; height: 4px; background: var(--border2); border-radius: 2px; margin: 12px auto 0; }
+.drawer-header {
+  padding: 1rem 1.25rem .75rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0;
+  background: #0f0f1c; z-index: 2;
+}
+.drawer-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 2px; }
+.drawer-pts { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--accent); letter-spacing: 1px; }
+.drawer-pts span { font-size: .7rem; letter-spacing: 2px; color: var(--muted2); font-family: 'DM Sans', sans-serif; margin-left: 4px; }
+.btn-close { background: none; border: 1px solid var(--border2); color: var(--muted2); border-radius: 6px; padding: .28rem .65rem; font-size: .7rem; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 1px; transition: border-color .15s, color .15s; }
+.btn-close:hover { border-color: var(--red); color: var(--red); }
+
+/* detail rows */
+.detail-section { padding: .9rem 1.25rem .25rem; }
+.detail-section-title { font-size: .6rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent); margin-bottom: .6rem; }
+.detail-row {
+  display: grid; grid-template-columns: 1fr 90px 70px 60px;
+  gap: .5rem; align-items: center; padding: .65rem .75rem; border-radius: 8px;
+  margin-bottom: 5px; background: var(--card); border: 1px solid var(--border);
+  font-size: .8rem;
+}
+.detail-row.correct { border-color: rgba(46,204,113,.2); background: rgba(46,204,113,.04); }
+.detail-row.wrong   { border-color: rgba(232,69,96,.15); background: rgba(232,69,96,.03); }
+.detail-row.pending { border-color: var(--border); }
+.dr-match { display: flex; flex-direction: column; gap: 2px; }
+.dr-label { font-size: .62rem; color: var(--muted2); letter-spacing: .5px; }
+.dr-pick { font-weight: 500; }
+.dr-pick.ok  { color: var(--green); }
+.dr-pick.ko  { color: var(--red); }
+.dr-pick.nd  { color: var(--muted2); }
+.dr-diff-col { text-align: center; }
+.dr-diff-predicted { font-size: .78rem; color: var(--text); }
+.dr-diff-actual { font-size: .65rem; color: var(--muted2); margin-top: 1px; }
+.dr-gap { text-align: center; }
+.gap-pill { display: inline-block; font-size: .68rem; font-weight: 600; padding: 2px 7px; border-radius: 4px; }
+.gap-pill.exact  { background: rgba(46,204,113,.15); color: var(--green); }
+.gap-pill.close  { background: rgba(247,199,68,.12); color: var(--accent); }
+.gap-pill.far    { background: rgba(255,255,255,.05); color: var(--muted2); }
+.gap-pill.nd     { background: transparent; color: var(--muted); }
+.dr-pts-col { text-align: right; }
+.dr-pts-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 1px; }
+.dr-pts-val.pos { color: var(--accent); }
+.dr-pts-val.zero { color: var(--muted); }
+.dr-pts-val.nd   { color: var(--muted); font-size: .75rem; font-family: 'DM Sans', sans-serif; }
+.dr-total-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .7rem .75rem; margin: .5rem 0 0; border-top: 1px solid var(--border2);
+  font-size: .78rem; color: var(--muted2);
+}
+.dr-total-pts { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--accent); }
+.dr-pending-note { font-size: .68rem; color: var(--muted); font-style: italic; margin-top: .3rem; }
+
+/* lb-row clickable */
+.lb-row { cursor: pointer; }
+.lb-row:hover { background: rgba(247,199,68,.04); }
+.lb-row.me:hover { background: rgba(247,199,68,.08); }
+.lb-name-arrow::after { content: ' ›'; color: var(--muted); font-size: .8rem; }
+
 /* ─── TOAST ─── */
 .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--card2); border: 1px solid var(--border2); border-radius: 7px; padding: .6rem 1.2rem; font-size: .8rem; z-index: 100; transition: transform .3s; white-space: nowrap; }
 .toast.show { transform: translateX(-50%) translateY(0); }
@@ -238,7 +311,7 @@ input[type="range"]::-webkit-slider-thumb {
 <!-- ══════════ APP ══════════ -->
 <div id="screen-app" class="screen">
   <div class="app-header">
-    <div class="app-logo">NBA <span>PRONOS</span></div>
+    <div class="app-logo">NBA <span>PRONOS</span><span id="dev-badge" style="display:none;font-size:.55rem;letter-spacing:2px;background:#e84560;color:#fff;border-radius:3px;padding:2px 7px;margin-left:8px;vertical-align:middle">DEV</span></div>
     <div class="user-pill">
       <div class="avatar" id="hdr-av">?</div>
       <span class="uname" id="hdr-name">—</span>
@@ -265,61 +338,99 @@ input[type="range"]::-webkit-slider-thumb {
   </div>
 </div>
 
+<!-- ══════════ DETAIL DRAWER ══════════ -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer(event)">
+  <div class="drawer" id="drawer">
+    <div class="drawer-handle"></div>
+    <div class="drawer-header">
+      <div>
+        <div class="drawer-title" id="drawer-name">—</div>
+        <div style="font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted2)">Détail des pronos</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <div><span class="drawer-pts" id="drawer-pts">0</span><span>pts</span></div>
+        <button class="btn-close" onclick="document.getElementById('drawer-overlay').classList.remove('open')">FERMER</button>
+      </div>
+    </div>
+    <div id="drawer-content"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 // ══════════════════════════════════════════
 //  CONFIG
 // ══════════════════════════════════════════
-const BIN_ID  = '6a0f5f876877513b27aed9f3';
+const IS_DEV  = new URLSearchParams(window.location.search).has('dev');
+const BIN_ID  = IS_DEV ? '6a0ff92c6877513b27b29f3a' : '6a0f5f876877513b27aed9f3';
 const BIN_KEY = '$2a$10$qHs/E9l5SuCFpgM5hOBjnuncSRnjo6psyEDp5mO3m53pNQaDGbB.q';
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
 // ══════════════════════════════════════════
-//  NBA DATA  — données initiales codées en dur
-//  puis enrichies depuis l'API au chargement
+//  NBA DATA
+//  Définition des séries — les matchs sont
+//  entièrement reconstruits depuis l'API
 // ══════════════════════════════════════════
-// Chaque série contient une liste de matchs joués et le prochain match à parier
-// Structure match : { id, gameNum, team1, team2, winner(null=pas encore joué), score1, score2 }
+const BDL_KEY = '0edbbff5-741c-44f6-8ffb-197a9f1dd9d6';
+const BDL_BASE = 'https://api.balldontlie.io/v1';
 
+// Map nom complet → abbr interne (toutes les équipes possibles pour les Finals)
+const TEAM_ABBR = {
+  'New York Knicks': 'NYK',
+  'Cleveland Cavaliers': 'CLE',
+  'Oklahoma City Thunder': 'OKC',
+  'San Antonio Spurs': 'SAS',
+  'Boston Celtics': 'BOS',
+  'Miami Heat': 'MIA',
+  'Milwaukee Bucks': 'MIL',
+  'Indiana Pacers': 'IND',
+  'Philadelphia 76ers': 'PHI',
+  'Chicago Bulls': 'CHI',
+  'Atlanta Hawks': 'ATL',
+  'Brooklyn Nets': 'BKN',
+  'Toronto Raptors': 'TOR',
+  'Detroit Pistons': 'DET',
+  'Charlotte Hornets': 'CHA',
+  'Washington Wizards': 'WAS',
+  'Orlando Magic': 'ORL',
+  'Los Angeles Lakers': 'LAL',
+  'Golden State Warriors': 'GSW',
+  'Phoenix Suns': 'PHX',
+  'Denver Nuggets': 'DEN',
+  'Minnesota Timberwolves': 'MIN',
+  'Dallas Mavericks': 'DAL',
+  'Houston Rockets': 'HOU',
+  'Memphis Grizzlies': 'MEM',
+  'Utah Jazz': 'UTA',
+  'New Orleans Pelicans': 'NOP',
+  'Portland Trail Blazers': 'POR',
+  'Sacramento Kings': 'SAC',
+  'Los Angeles Clippers': 'LAC',
+};
+
+// Définition de base des séries — SANS matchs, reconstruits depuis l'API
 const SERIES_INIT = [
   {
     id: 'east-finals',
     label: 'Finale de Conférence Est',
     team1: { abbr: 'NYK', name: 'New York Knicks' },
     team2: { abbr: 'CLE', name: 'Cleveland Cavaliers' },
-    wins1: 1, wins2: 0,
-    done: false,
-    seriesWinner: null,
-    matches: [
-      { id: 'east-g1', num: 1, winner: 'NYK', score1: 115, score2: 104 },
-    ],
-    nextGame: 2,
+    wins1: 0, wins2: 0, done: false, seriesWinner: null, matches: [], nextGame: 1,
   },
   {
     id: 'west-finals',
     label: 'Finale de Conférence Ouest',
     team1: { abbr: 'OKC', name: 'Oklahoma City Thunder' },
     team2: { abbr: 'SAS', name: 'San Antonio Spurs' },
-    wins1: 1, wins2: 1,
-    done: false,
-    seriesWinner: null,
-    matches: [
-      { id: 'west-g1', num: 1, winner: 'SAS', score1: 115, score2: 122 },
-      { id: 'west-g2', num: 2, winner: 'OKC', score1: 122, score2: 113 },
-    ],
-    nextGame: 3,
+    wins1: 0, wins2: 0, done: false, seriesWinner: null, matches: [], nextGame: 1,
   },
   {
     id: 'nba-finals',
     label: 'NBA Finals 2026',
     team1: { abbr: '???', name: 'Champion Est' },
     team2: { abbr: '???', name: 'Champion Ouest' },
-    wins1: 0, wins2: 0,
-    done: false,
-    seriesWinner: null,
-    matches: [],
-    nextGame: 1,
+    wins1: 0, wins2: 0, done: false, seriesWinner: null, matches: [], nextGame: 1,
   },
 ];
 
@@ -357,75 +468,146 @@ async function dbWrite() {
 }
 
 // ══════════════════════════════════════════
-//  NBA LIVE DATA  (balldontlie — clé gratuite)
-//  On fetche au chargement uniquement
+//  NBA LIVE DATA  (balldontlie)
+//  Chargement unique au démarrage
 // ══════════════════════════════════════════
 async function fetchNBAResults() {
-  // On utilise l'API publique de balldontlie v1 avec clé gratuite
-  // endpoint: GET /games?seasons[]=2025&postseason=true&per_page=100
-  // Si la clé n'est pas dispo on reste sur les données codées en dur
   try {
-    const r = await fetch('https://api.balldontlie.io/v1/games?seasons[]=2025&postseason=true&per_page=100', {
-      headers: { 'Authorization': 'live-data-optional' }
-    });
-    // Si 401/403 on ignore silencieusement, les données codées en dur sont déjà à jour
-    if (!r.ok) return;
-    const data = await r.json();
-    applyLiveData(data.data || []);
+    // L'endpoint /games filtre par postseason=true et saison 2025 (= saison 2025-26)
+    // La clé gratuite autorise cet endpoint. On pagine si besoin (per_page=100 max).
+    let allGames = [];
+    let cursor = null;
+    let page = 0;
+    do {
+      const params = new URLSearchParams({
+        'seasons[]': '2025',
+        postseason: 'true',
+        per_page: '100',
+      });
+      if (cursor) params.set('cursor', cursor);
+      const r = await fetch(`${BDL_BASE}/games?${params}`, {
+        headers: { 'Authorization': BDL_KEY }
+      });
+      if (!r.ok) { console.warn('BDL fetch error', r.status); break; }
+      const data = await r.json();
+      allGames = allGames.concat(data.data || []);
+      cursor = data.meta?.next_cursor ?? null;
+      page++;
+    } while (cursor && page < 5); // sécurité : max 5 pages
+
+    if (allGames.length) {
+      applyLiveData(allGames);
+    } else {
+      // Fallback si API vide : données codées en dur à jour au 22 mai 2026
+      applyFallback();
+    }
   } catch(e) {
-    // Réseau ou CORS → on reste sur les données initiales, aucun souci
+    console.warn('BDL error, using fallback', e);
+    applyFallback();
   }
 }
 
+// Fallback codé en dur (derniers résultats connus)
+function applyFallback() {
+  const east = SERIES.find(s => s.id === 'east-finals');
+  east.matches = [
+    { id: 'east-g1', num: 1, winner: 'NYK', score1: 119, score2: 107 },
+  ];
+  const west = SERIES.find(s => s.id === 'west-finals');
+  west.matches = [
+    { id: 'west-g1', num: 1, winner: 'SAS', score1: 115, score2: 122 },
+    { id: 'west-g2', num: 2, winner: 'OKC', score1: 122, score2: 113 },
+  ];
+  recomputeSeries();
+}
+
 function applyLiveData(games) {
-  // Mappe les données API sur nos séries (equipes identifiées par abbreviation)
-  const abbrevMap = {
-    'New York Knicks': 'NYK', 'Cleveland Cavaliers': 'CLE',
-    'Oklahoma City Thunder': 'OKC', 'San Antonio Spurs': 'SAS',
-  };
+  // On garde uniquement les matchs terminés (status "Final")
+  // et on les groupe par paire d'équipes pour reconstruire chaque série
+  const finished = games.filter(g =>
+    g.status === 'Final' &&
+    (g.home_team_score > 0 || g.visitor_team_score > 0)
+  );
 
-  games.forEach(g => {
-    const t1 = abbrevMap[g.home_team?.full_name];
-    const t2 = abbrevMap[g.visitor_team?.full_name];
-    if (!t1 || !t2) return;
-    const score1 = g.home_team_score, score2 = g.visitor_team_score;
-    if (!score1 && !score2) return; // match pas encore joué ou données manquantes
+  // Groupe par série (paire d'équipes) — trié par date pour avoir le bon numéro de match
+  finished.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-    const series = SERIES.find(s =>
-      (s.team1.abbr === t1 && s.team2.abbr === t2) ||
-      (s.team1.abbr === t2 && s.team2.abbr === t1)
-    );
-    if (!series) return;
+  // Pour chaque série connue, collecte les matchs correspondants
+  SERIES.forEach(s => {
+    if (s.id === 'nba-finals') return; // on remplira après
+    s.matches = [];
+    const abbrs = [s.team1.abbr, s.team2.abbr];
 
-    // Reconstruit la liste des matchs joués depuis l'API
-    // (on repart de zéro pour éviter les doublons)
-    const flipped = series.team1.abbr === t2; // équipe visiteuse = team1 dans notre modèle
-    const s1 = flipped ? score2 : score1;
-    const s2 = flipped ? score1 : score2;
-    const gameNum = parseInt(g.postseason?.game || 0) || series.matches.length + 1;
-    const winner = s1 > s2 ? series.team1.abbr : series.team2.abbr;
+    const seriesGames = finished.filter(g => {
+      const ha = TEAM_ABBR[g.home_team?.full_name];
+      const va = TEAM_ABBR[g.visitor_team?.full_name];
+      return abbrs.includes(ha) && abbrs.includes(va);
+    });
 
-    const existing = series.matches.find(m => m.num === gameNum);
-    if (!existing) {
-      series.matches.push({ id: series.id + '-g' + gameNum, num: gameNum, winner, score1: s1, score2: s2 });
-    }
+    seriesGames.forEach((g, idx) => {
+      const ha = TEAM_ABBR[g.home_team?.full_name];
+      const va = TEAM_ABBR[g.visitor_team?.full_name];
+      const hs = g.home_team_score, vs = g.visitor_team_score;
+      // Oriente score1/score2 selon l'ordre team1/team2 de la série
+      const score1 = ha === s.team1.abbr ? hs : vs;
+      const score2 = ha === s.team2.abbr ? hs : vs;
+      const winner = score1 > score2 ? s.team1.abbr : s.team2.abbr;
+      const num = idx + 1;
+      s.matches.push({ id: `${s.id}-g${num}`, num, winner, score1, score2 });
+    });
   });
 
-  // Recalcule wins et nextGame pour chaque série
+  // Détecte si des équipes inconnues ont joué (NBA Finals en cours ou à venir)
+  const knownAbbrs = ['NYK','CLE','OKC','SAS'];
+  const finalsGames = finished.filter(g => {
+    const ha = TEAM_ABBR[g.home_team?.full_name];
+    const va = TEAM_ABBR[g.visitor_team?.full_name];
+    return ha && va && !knownAbbrs.includes(ha) === false && !knownAbbrs.includes(va) === false
+      && !(
+        (ha === 'NYK' || ha === 'CLE') && (va === 'NYK' || va === 'CLE') ||
+        (ha === 'OKC' || ha === 'SAS') && (va === 'OKC' || va === 'SAS')
+      );
+  });
+
+  if (finalsGames.length) {
+    const nbaF = SERIES.find(s => s.id === 'nba-finals');
+    const firstGame = finalsGames[0];
+    const ha = TEAM_ABBR[firstGame.home_team?.full_name];
+    const va = TEAM_ABBR[firstGame.visitor_team?.full_name];
+    // Détermine team1 (Est) et team2 (Ouest) — heuristique : conf détectée via données codées
+    const eastTeam = ['NYK','CLE','BOS','MIA','MIL','IND','PHI','CHI','ATL','BKN','TOR','DET','CHA','WAS','ORL'].includes(ha) ? ha : va;
+    const westTeam = eastTeam === ha ? va : ha;
+    nbaF.team1 = { abbr: eastTeam, name: firstGame[eastTeam === ha ? 'home_team' : 'visitor_team'].full_name };
+    nbaF.team2 = { abbr: westTeam, name: firstGame[westTeam === ha ? 'home_team' : 'visitor_team'].full_name };
+    nbaF.matches = finalsGames.map((g, idx) => {
+      const hs = g.home_team_score, vs = g.visitor_team_score;
+      const h = TEAM_ABBR[g.home_team?.full_name];
+      const score1 = h === nbaF.team1.abbr ? hs : vs;
+      const score2 = h === nbaF.team2.abbr ? hs : vs;
+      const winner = score1 > score2 ? nbaF.team1.abbr : nbaF.team2.abbr;
+      return { id: `nba-finals-g${idx+1}`, num: idx+1, winner, score1, score2 };
+    });
+  }
+
+  recomputeSeries();
+}
+
+function recomputeSeries() {
   SERIES.forEach(s => {
+    if (s.id === 'nba-finals' && s.team1.abbr === '???') return;
     s.wins1 = s.matches.filter(m => m.winner === s.team1.abbr).length;
     s.wins2 = s.matches.filter(m => m.winner === s.team2.abbr).length;
     if (s.wins1 >= 4) { s.done = true; s.seriesWinner = s.team1.abbr; }
     else if (s.wins2 >= 4) { s.done = true; s.seriesWinner = s.team2.abbr; }
-    else { s.nextGame = s.matches.length + 1; }
+    else { s.done = false; s.seriesWinner = null; s.nextGame = s.matches.length + 1; }
   });
-
   updateFinalsTeams();
 }
 
 function updateFinalsTeams() {
   const finals = SERIES.find(s => s.id === 'nba-finals');
-  if (!finals || finals.done) return;
+  // Ne met à jour que si les equipes sont encore inconnues (pas encore de matchs NBA Finals)
+  if (!finals || finals.matches.length > 0) return;
   const east = SERIES.find(s => s.id === 'east-finals');
   const west = SERIES.find(s => s.id === 'west-finals');
   if (east?.seriesWinner) {
@@ -435,6 +617,14 @@ function updateFinalsTeams() {
   if (west?.seriesWinner) {
     const w = west.seriesWinner === west.team1.abbr ? west.team1 : west.team2;
     finals.team2 = { ...w };
+  }
+  // Recalcule wins des Finals si matchs présents
+  if (finals.matches.length) {
+    finals.wins1 = finals.matches.filter(m => m.winner === finals.team1.abbr).length;
+    finals.wins2 = finals.matches.filter(m => m.winner === finals.team2.abbr).length;
+    if (finals.wins1 >= 4) { finals.done = true; finals.seriesWinner = finals.team1.abbr; }
+    else if (finals.wins2 >= 4) { finals.done = true; finals.seriesWinner = finals.team2.abbr; }
+    else { finals.nextGame = finals.matches.length + 1; }
   }
 }
 
@@ -718,24 +908,44 @@ async function submitBet(seriesId, matchKey) {
 // ══════════════════════════════════════════
 //  LEADERBOARD
 // ══════════════════════════════════════════
-function calcScore(uid) {
-  let pts = 0;
+
+// Calcule les points d'un utilisateur ET retourne le détail par pari
+function calcScoreDetail(uid) {
   const up = db.pronos[uid] || {};
+  let totalPts = 0;
+  const detail = []; // { series, matchNum, prono, match, pts, diffGap }
+
   SERIES.forEach(s => {
     s.matches.forEach(m => {
       const key = `${s.id}-g${m.num}`;
       const p = up[key];
       if (!p) return;
+      const actual = Math.abs(m.score1 - m.score2);
+      const d = Math.abs(p.diff - actual);
+      let pts = 0;
+      let diffPts = 0;
       if (p.winner === m.winner) {
         pts += 3;
-        const actual = Math.abs(m.score1 - m.score2);
-        const d = Math.abs(p.diff - actual);
-        if (d <= 3) pts += 2;
-        else if (d <= 7) pts += 1;
+        if (d <= 3) { diffPts = 2; }
+        else if (d <= 7) { diffPts = 1; }
+        pts += diffPts;
       }
+      totalPts += pts;
+      detail.push({ series: s, matchNum: m.num, match: m, prono: p, pts, diffPts, actual, d, resultKnown: true });
     });
+    // Paris sur le prochain match (pas encore joué)
+    const nextKey = `${s.id}-g${s.nextGame}`;
+    const pNext = up[nextKey];
+    if (pNext && !s.done) {
+      detail.push({ series: s, matchNum: s.nextGame, match: null, prono: pNext, pts: null, diffPts: null, actual: null, d: null, resultKnown: false });
+    }
   });
-  return pts;
+
+  return { totalPts, detail };
+}
+
+function calcScore(uid) {
+  return calcScoreDetail(uid).totalPts;
 }
 
 function renderLeaderboard() {
@@ -753,9 +963,9 @@ function renderLeaderboard() {
   }
 
   const rows = users.map((u,i) => `
-    <div class="lb-row ${u.uid===currentUser?'me':''}">
+    <div class="lb-row ${u.uid===currentUser?'me':''}" onclick="openDrawer('${u.uid}')">
       <div class="lb-rank ${i<3?'top':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
-      <div class="lb-name">${esc(u.name)}${u.uid===currentUser?' <span style="color:var(--muted);font-size:.7rem">(moi)</span>':''}</div>
+      <div class="lb-name lb-name-arrow">${esc(u.name)}${u.uid===currentUser?' <span style="color:var(--muted);font-size:.7rem">(moi)</span>':''}</div>
       <div class="lb-c">${u.bets}</div>
       <div class="lb-c pts">${u.pts}</div>
     </div>`).join('');
@@ -764,6 +974,124 @@ function renderLeaderboard() {
     <div class="lb-head"><div>#</div><div>Joueur</div><div>Paris</div><div>Pts</div></div>
     ${rows}
   </div>`;
+}
+
+// ══════════════════════════════════════════
+//  DETAIL DRAWER
+// ══════════════════════════════════════════
+function openDrawer(uid) {
+  const user = db.users[uid];
+  if (!user) return;
+  const { totalPts, detail } = calcScoreDetail(uid);
+
+  document.getElementById('drawer-name').textContent = user.name + (uid === currentUser ? ' (moi)' : '');
+  document.getElementById('drawer-pts').textContent = totalPts;
+
+  // Groupe par série
+  const bySeries = {};
+  detail.forEach(d => {
+    const sid = d.series.id;
+    if (!bySeries[sid]) bySeries[sid] = [];
+    bySeries[sid].push(d);
+  });
+
+  let html = '';
+
+  if (!detail.length) {
+    html = '<div style="padding:2rem;text-align:center;color:var(--muted);font-size:.82rem">Aucun pari enregistré.</div>';
+  } else {
+    Object.keys(bySeries).forEach(sid => {
+      const items = bySeries[sid];
+      const s = items[0].series;
+      html += `<div class="detail-section">
+        <div class="detail-section-title">${s.label}</div>`;
+
+      items.sort((a,b) => a.matchNum - b.matchNum).forEach(item => {
+        const { match, prono, pts, diffPts, actual, d, resultKnown } = item;
+        const pickName = prono.winner === s.team1.abbr ? s.team1.name : s.team2.name;
+
+        if (!resultKnown) {
+          // Match à venir
+          html += `<div class="detail-row pending">
+            <div class="dr-match">
+              <div class="dr-label">Match ${item.matchNum} · À jouer</div>
+              <div class="dr-pick nd">📌 ${esc(pickName)}</div>
+            </div>
+            <div class="dr-diff-col">
+              <div class="dr-diff-predicted">± ${prono.diff} pts</div>
+              <div class="dr-diff-actual">Prédit</div>
+            </div>
+            <div class="dr-gap"><span class="gap-pill nd">—</span></div>
+            <div class="dr-pts-col"><span class="dr-pts-val nd">?</span></div>
+          </div>`;
+          return;
+        }
+
+        const correct = prono.winner === match.winner;
+        const rowClass = correct ? 'correct' : 'wrong';
+        const pickClass = correct ? 'ok' : 'ko';
+        const icon = correct ? '✓' : '✗';
+        const actualDiff = actual;
+
+        let gapLabel = ''; let gapClass = '';
+        if (correct) {
+          if (d <= 3)      { gapLabel = `±${d} 🎯`; gapClass = 'exact'; }
+          else if (d <= 7) { gapLabel = `±${d} 👍`; gapClass = 'close'; }
+          else             { gapLabel = `±${d}`;     gapClass = 'far'; }
+        } else {
+          gapLabel = `±${d}`; gapClass = 'far';
+        }
+
+        const ptsDisplay = pts > 0
+          ? `<span class="dr-pts-val pos">+${pts}</span>`
+          : `<span class="dr-pts-val zero">0</span>`;
+
+        const breakdown = correct
+          ? `<div style="font-size:.6rem;color:var(--muted);margin-top:2px">Victoire +3${diffPts>0?' · Écart +'+diffPts:''}</div>`
+          : '';
+
+        html += `<div class="detail-row ${rowClass}">
+          <div class="dr-match">
+            <div class="dr-label">Match ${item.matchNum} · Réel: ${Math.max(match.score1,match.score2)}–${Math.min(match.score1,match.score2)}</div>
+            <div class="dr-pick ${pickClass}">${icon} ${esc(pickName)}</div>
+            ${breakdown}
+          </div>
+          <div class="dr-diff-col">
+            <div class="dr-diff-predicted">± ${prono.diff} pts</div>
+            <div class="dr-diff-actual">Réel: ${actualDiff} pts</div>
+          </div>
+          <div class="dr-gap"><span class="gap-pill ${gapClass}">${gapLabel}</span></div>
+          <div class="dr-pts-col">${ptsDisplay}</div>
+        </div>`;
+      });
+
+      // Sous-total série
+      const seriesPts = items.filter(i=>i.resultKnown).reduce((a,i)=>a+(i.pts||0),0);
+      const hasPending = items.some(i=>!i.resultKnown);
+      html += `<div class="dr-total-row">
+        <span>Sous-total ${s.label.split(' ').slice(-1)[0]}</span>
+        <span class="dr-total-pts">+${seriesPts} pts</span>
+      </div>`;
+      if (hasPending) html += `<div class="dr-pending-note" style="padding:0 .75rem .5rem">* Paris en attente non comptabilisés</div>`;
+
+      html += `</div>`; // close detail-section
+    });
+
+    // Total général
+    html += `<div style="margin:.75rem 1.25rem 0;padding:.9rem 1rem;background:rgba(247,199,68,.06);border:1px solid rgba(247,199,68,.2);border-radius:8px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted2)">Total général</span>
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--accent);letter-spacing:1px">${totalPts} <span style="font-size:.7rem;font-family:'DM Sans',sans-serif;color:var(--muted2)">pts</span></span>
+    </div>`;
+  }
+
+  document.getElementById('drawer-content').innerHTML = html;
+  document.getElementById('drawer-overlay').classList.add('open');
+}
+
+function closeDrawer(e) {
+  if (e.target === document.getElementById('drawer-overlay')) {
+    document.getElementById('drawer-overlay').classList.remove('open');
+  }
 }
 
 // ══════════════════════════════════════════
@@ -780,6 +1108,7 @@ function toast(msg) {
 // ══════════════════════════════════════════
 //  BOOT
 // ══════════════════════════════════════════
+if (IS_DEV) document.getElementById('dev-badge').style.display = 'inline';
 document.getElementById('inp-pseudo').addEventListener('keydown', e => { if(e.key==='Enter') loginNew(); });
 initLogin();
 </script>
