@@ -68,6 +68,32 @@ input[type="text"]::placeholder { color: var(--muted); }
 .chip-meta { font-size: .68rem; color: var(--muted2); }
 .note { color: var(--muted2); font-size: .78rem; text-align: center; padding: .75rem; }
 
+
+/* ─── LOGIN TOGGLE ─── */
+.new-player-toggle {
+  margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border2);
+  text-align: center;
+}
+.toggle-btn {
+  background: none; border: none; color: var(--muted); font-size: .7rem;
+  letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; transition: color .15s; padding: .3rem .5rem;
+}
+.toggle-btn:hover { color: var(--accent); }
+.toggle-arrow { display: inline-block; transition: transform .2s; margin-left: 4px; }
+.toggle-arrow.open { transform: rotate(180deg); }
+
+.new-player-form {
+  display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border2);
+  animation: slideDown .2s ease;
+}
+.new-player-form.open { display: block; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ─── APP HEADER ─── */
 .app-header {
   padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
@@ -119,22 +145,73 @@ input[type="text"]::placeholder { color: var(--muted); }
 /* ─── MATCH CARD ─── */
 .match-card {
   background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-  margin-bottom: .6rem; overflow: hidden; transition: border-color .2s;
+  margin-bottom: .65rem; overflow: hidden; transition: border-color .2s;
   position: relative;
 }
 .match-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
-.match-card.past::before { background: var(--border2); }
-.match-card.next::before { background: var(--accent); }
-.match-card.upcoming::before { background: var(--border2); }
+.match-card.past.won::before  { background: var(--green); }
+.match-card.past.lost::before { background: var(--red); }
+.match-card.past.nobet::before{ background: var(--border2); }
+.match-card.next::before      { background: var(--accent); }
+.match-card.upcoming::before  { background: var(--border2); }
 
-.match-top { display: flex; align-items: center; justify-content: space-between; padding: .75rem 1rem .6rem; }
-.match-gnum { font-family: 'Bebas Neue', sans-serif; font-size: .8rem; letter-spacing: 2px; color: var(--muted2); }
-.match-result { font-size: .75rem; font-weight: 500; }
-.match-result .mw { color: var(--accent); }
-.match-result .ms { color: var(--muted2); margin-left: .3rem; font-size: .7rem; }
+/* Official result header */
+.match-official {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .6rem 1rem .55rem;
+}
+.match-gnum { font-family: 'Bebas Neue', sans-serif; font-size: .75rem; letter-spacing: 2px; color: var(--muted2); }
+.match-score-display { display: flex; align-items: center; gap: .5rem; }
+.match-winner-name { font-size: .82rem; font-weight: 600; color: var(--text); }
+.match-score-pill {
+  font-family: 'Bebas Neue', sans-serif; font-size: .85rem; letter-spacing: 1px;
+  background: var(--border2); color: var(--muted2); padding: 1px 8px; border-radius: 4px;
+}
 .match-result.pending { color: var(--muted); font-style: italic; font-size: .72rem; }
 
-/* prono zone inside card */
+/* Prono result row — under official result */
+.prono-result-row {
+  border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: center; gap: .5rem;
+  padding: .55rem 1rem;
+}
+.prono-result-row.won  { background: rgba(46,204,113,.04); }
+.prono-result-row.lost { background: rgba(232,69,96,.04); }
+.prono-result-row.nobet{ background: transparent; }
+
+.prr-left { display: flex; flex-direction: column; gap: 3px; }
+.prr-pick { font-size: .8rem; font-weight: 600; display: flex; align-items: center; gap: .35rem; }
+.prr-pick .pick-icon { font-size: .85rem; }
+.prr-pick.won  .pick-label { color: var(--green); }
+.prr-pick.lost .pick-label { color: var(--red); }
+.prr-pick.nobet .pick-label { color: var(--muted2); font-weight: 400; font-style: italic; }
+.prr-diff { font-size: .68rem; color: var(--muted2); display: flex; align-items: center; gap: .4rem; }
+.diff-predicted { color: var(--muted2); }
+.diff-actual    { color: var(--muted2); }
+.diff-gap-tag {
+  font-size: .6rem; font-weight: 700; letter-spacing: .5px; padding: 1px 5px;
+  border-radius: 3px; text-transform: uppercase;
+}
+.diff-gap-tag.exact { background: rgba(46,204,113,.2);  color: var(--green); }
+.diff-gap-tag.close { background: rgba(247,199,68,.18); color: var(--accent); }
+.diff-gap-tag.far   { background: rgba(255,255,255,.06); color: var(--muted); }
+
+/* Points badge */
+.prr-pts {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-width: 52px; border-radius: 8px; padding: .3rem .5rem; text-align: center;
+}
+.prr-pts.won  { background: rgba(46,204,113,.12); border: 1px solid rgba(46,204,113,.25); }
+.prr-pts.lost { background: rgba(232,69,96,.1);   border: 1px solid rgba(232,69,96,.2); }
+.prr-pts.nobet{ background: var(--border); border: 1px solid var(--border2); }
+.pts-number { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 1px; line-height: 1; }
+.prr-pts.won  .pts-number { color: var(--green); }
+.prr-pts.lost .pts-number { color: var(--red); }
+.prr-pts.nobet .pts-number { color: var(--muted); }
+.pts-breakdown { font-size: .55rem; color: var(--muted2); letter-spacing: .5px; margin-top: 1px; white-space: nowrap; }
+
+/* prono zone inside card (form for next game) */
 .match-prono { border-top: 1px solid var(--border); padding: .8rem 1rem; }
 .mp-label { font-size: .6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: .55rem; }
 .mp-picks { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: .75rem; }
@@ -161,116 +238,256 @@ input[type="range"]::-webkit-slider-thumb {
 .flash { font-size: .68rem; color: var(--green); letter-spacing: 1px; opacity: 0; transition: opacity .3s; }
 .flash.show { opacity: 1; }
 
-/* prono locked display */
-.prono-view { border-top: 1px solid var(--border); padding: .7rem 1rem; display: flex; align-items: center; justify-content: space-between; }
-.pv-pick { font-size: .8rem; font-weight: 600; }
-.pv-pick.correct { color: var(--green); }
-.pv-pick.wrong { color: var(--red); }
-.pv-pick.pending { color: var(--accent); }
-.pv-detail { font-size: .68rem; color: var(--muted2); }
-.pv-icon { font-size: .9rem; }
-
-/* others pronos table */
-.others-block { margin-top: .5rem; border-top: 1px solid var(--border); }
-.others-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: .5rem 1rem; border-bottom: 1px solid var(--border); font-size: .78rem;
+/* prono locked (next game, submitted) */
+.prono-view {
+  border-top: 1px solid var(--border);
+  padding: .85rem 1rem .75rem;
+  background: rgba(247,199,68,.03);
 }
-.others-row:last-child { border-bottom: none; }
-.or-name { color: var(--muted2); font-size: .72rem; }
-.or-pick { font-weight: 500; }
-.or-pick.correct { color: var(--green); }
-.or-pick.wrong { color: var(--red); }
-.or-pick.pending { color: var(--text); }
-.or-diff { font-size: .68rem; color: var(--muted); }
-
-/* ─── LEADERBOARD ─── */
-.lb-info { background: var(--card); border: 1px solid var(--border); border-radius: 9px; padding: .9rem 1.1rem; margin-bottom: 1.5rem; font-size: .77rem; color: var(--muted2); line-height: 1.6; }
-.lb-info strong { color: var(--text); }
-.lb-table { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-.lb-head { display: grid; grid-template-columns: 36px 1fr 50px 50px; padding: .55rem 1.1rem; font-size: .6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
-.lb-row { display: grid; grid-template-columns: 36px 1fr 50px 50px; padding: .75rem 1.1rem; border-bottom: 1px solid var(--border); align-items: center; font-size: .83rem; }
-.lb-row:last-child { border-bottom: none; }
-.lb-row.me { background: rgba(247,199,68,.04); }
-.lb-rank { font-family: 'Bebas Neue', sans-serif; font-size: .95rem; color: var(--muted); }
-.lb-rank.top { color: var(--accent); }
-.lb-name { font-weight: 500; }
-.lb-c { text-align: right; color: var(--muted2); font-size: .75rem; }
-.lb-c.pts { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; color: var(--text); }
-.lb-empty { text-align: center; color: var(--muted); padding: 2rem; font-size: .83rem; }
-
-
-/* ─── DETAIL DRAWER ─── */
-.drawer-overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
-  backdrop-filter: blur(4px); z-index: 50; align-items: flex-end; justify-content: center;
+.pv-my-label { font-size: .58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+.pv-pick-row { display: flex; align-items: center; justify-content: space-between; }
+.pv-pick-info { display: flex; align-items: center; gap: .6rem; }
+.pv-team-badge {
+  background: rgba(247,199,68,.12); border: 1px solid rgba(247,199,68,.3);
+  border-radius: 7px; padding: .35rem .75rem;
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 1.5px; color: var(--accent);
 }
-.drawer-overlay.open { display: flex; }
-.drawer {
-  background: #0f0f1c; border: 1px solid var(--border2); border-radius: 16px 16px 0 0;
-  width: 100%; max-width: 760px; max-height: 85vh; overflow-y: auto;
-  padding: 0 0 2rem; transform: translateY(100%); transition: transform .3s ease;
-}
-.drawer-overlay.open .drawer { transform: translateY(0); }
-.drawer::-webkit-scrollbar { width: 3px; }
-.drawer::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-.drawer-handle { width: 36px; height: 4px; background: var(--border2); border-radius: 2px; margin: 12px auto 0; }
-.drawer-header {
-  padding: 1rem 1.25rem .75rem; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0;
-  background: #0f0f1c; z-index: 2;
-}
-.drawer-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 2px; }
-.drawer-pts { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--accent); letter-spacing: 1px; }
-.drawer-pts span { font-size: .7rem; letter-spacing: 2px; color: var(--muted2); font-family: 'DM Sans', sans-serif; margin-left: 4px; }
-.btn-close { background: none; border: 1px solid var(--border2); color: var(--muted2); border-radius: 6px; padding: .28rem .65rem; font-size: .7rem; cursor: pointer; font-family: 'DM Sans', sans-serif; letter-spacing: 1px; transition: border-color .15s, color .15s; }
-.btn-close:hover { border-color: var(--red); color: var(--red); }
-
-/* detail rows */
-.detail-section { padding: .9rem 1.25rem .25rem; }
-.detail-section-title { font-size: .6rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent); margin-bottom: .6rem; }
-.detail-row {
-  display: grid; grid-template-columns: 1fr 90px 70px 60px;
-  gap: .5rem; align-items: center; padding: .65rem .75rem; border-radius: 8px;
-  margin-bottom: 5px; background: var(--card); border: 1px solid var(--border);
-  font-size: .8rem;
-}
-.detail-row.correct { border-color: rgba(46,204,113,.2); background: rgba(46,204,113,.04); }
-.detail-row.wrong   { border-color: rgba(232,69,96,.15); background: rgba(232,69,96,.03); }
-.detail-row.pending { border-color: var(--border); }
-.dr-match { display: flex; flex-direction: column; gap: 2px; }
-.dr-label { font-size: .62rem; color: var(--muted2); letter-spacing: .5px; }
-.dr-pick { font-weight: 500; }
-.dr-pick.ok  { color: var(--green); }
-.dr-pick.ko  { color: var(--red); }
-.dr-pick.nd  { color: var(--muted2); }
-.dr-diff-col { text-align: center; }
-.dr-diff-predicted { font-size: .78rem; color: var(--text); }
-.dr-diff-actual { font-size: .65rem; color: var(--muted2); margin-top: 1px; }
-.dr-gap { text-align: center; }
-.gap-pill { display: inline-block; font-size: .68rem; font-weight: 600; padding: 2px 7px; border-radius: 4px; }
-.gap-pill.exact  { background: rgba(46,204,113,.15); color: var(--green); }
-.gap-pill.close  { background: rgba(247,199,68,.12); color: var(--accent); }
-.gap-pill.far    { background: rgba(255,255,255,.05); color: var(--muted2); }
-.gap-pill.nd     { background: transparent; color: var(--muted); }
-.dr-pts-col { text-align: right; }
-.dr-pts-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 1px; }
-.dr-pts-val.pos { color: var(--accent); }
-.dr-pts-val.zero { color: var(--muted); }
-.dr-pts-val.nd   { color: var(--muted); font-size: .75rem; font-family: 'DM Sans', sans-serif; }
-.dr-total-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: .7rem .75rem; margin: .5rem 0 0; border-top: 1px solid var(--border2);
+.pv-diff-badge {
+  background: var(--border2); border: 1px solid var(--border2);
+  border-radius: 7px; padding: .35rem .65rem;
   font-size: .78rem; color: var(--muted2);
 }
-.dr-total-pts { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--accent); }
-.dr-pending-note { font-size: .68rem; color: var(--muted); font-style: italic; margin-top: .3rem; }
+.pv-diff-badge span { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: var(--text); letter-spacing: 1px; }
+.pv-lock { font-size: 1rem; color: var(--muted); }
 
-/* lb-row clickable */
-.lb-row { cursor: pointer; }
-.lb-row:hover { background: rgba(247,199,68,.04); }
-.lb-row.me:hover { background: rgba(247,199,68,.08); }
-.lb-name-arrow::after { content: ' ›'; color: var(--muted); font-size: .8rem; }
+/* others pronos table */
+.others-block { border-top: 1px solid var(--border); }
+.others-title {
+  font-size: .58rem; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); padding: .55rem 1rem .3rem;
+}
+/* fixed 3-col grid: name | abbr | diff */
+.others-row {
+  display: grid; grid-template-columns: 1fr 60px 60px;
+  align-items: center; gap: 0;
+  padding: .4rem 1rem; border-bottom: 1px solid var(--border);
+}
+.others-row:last-child { border-bottom: none; }
+.others-head {
+  display: grid; grid-template-columns: 1fr 60px 60px;
+  gap: 0; padding: .25rem 1rem .1rem;
+  font-size: .58rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
+}
+.or-name { color: var(--muted2); font-size: .75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.or-pick { font-family: 'Bebas Neue', sans-serif; font-size: .9rem; color: var(--text); text-align: center; letter-spacing: 1px; }
+.or-diff { font-size: .7rem; color: var(--muted2); text-align: right; }
+
+/* ─── LEADERBOARD ─── */
+.lb-info {
+  background: var(--card); border: 1px solid var(--border); border-radius: 9px;
+  padding: .85rem 1.1rem; margin-bottom: 1.25rem; font-size: .77rem; color: var(--muted2); line-height: 1.6;
+}
+.lb-info strong { color: var(--text); }
+.lb-table { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.lb-head {
+  display: grid; grid-template-columns: 38px 1fr 54px 28px;
+  padding: .45rem 1rem; font-size: .58rem; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border);
+}
+.lb-entry { border-bottom: 1px solid var(--border); }
+.lb-entry:last-child { border-bottom: none; }
+.lb-row {
+  display: grid; grid-template-columns: 38px 1fr 54px 28px;
+  padding: .8rem 1rem; align-items: center; font-size: .84rem;
+  cursor: pointer; transition: background .15s; user-select: none;
+}
+.lb-row:hover { background: rgba(247,199,68,.05); }
+.lb-entry.open > .lb-row { background: rgba(247,199,68,.06); border-bottom: 1px solid var(--border2); }
+.lb-entry.me > .lb-row  { background: rgba(247,199,68,.04); }
+.lb-entry.me.open > .lb-row { background: rgba(247,199,68,.09); }
+.lb-rank { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: var(--muted); }
+.lb-rank.top { color: var(--accent); }
+.lb-name { font-weight: 500; }
+.lb-pts {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--text);
+  text-align: right; letter-spacing: 1px;
+}
+.lb-chevron {
+  text-align: right; color: var(--muted); font-size: .9rem;
+  transition: transform .2s; line-height: 1;
+}
+.lb-entry.open .lb-chevron { transform: rotate(90deg); color: var(--accent); }
+.lb-empty { text-align: center; color: var(--muted); padding: 2rem; font-size: .83rem; }
+
+/* ─── ACCORDION DETAIL ─── */
+.lb-detail {
+  display: none;
+  background: #0b0b16;
+  padding: .4rem .65rem .75rem;
+}
+.lb-entry.open .lb-detail { display: block; }
+
+.lbd-series-title {
+  font-size: .56rem; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--accent); margin: .6rem 0 .35rem; padding-left: 2px;
+}
+.lbd-series-title:first-child { margin-top: .3rem; }
+
+/* ── single-line match row ── */
+/* columns: G# | équipes+score | pick | écart | pts */
+.lbd-match {
+  display: grid;
+  grid-template-columns: 28px 1fr 70px 36px;
+  gap: 0;
+  align-items: center;
+  border-radius: 7px; margin-bottom: 4px;
+  border: 1px solid var(--border); overflow: hidden;
+  min-height: 34px;
+  position: relative;
+}
+.lbd-match::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+}
+.lbd-match.won  { border-color: rgba(46,204,113,.2); }
+.lbd-match.won::before  { background: var(--green); }
+.lbd-match.lost { border-color: rgba(232,69,96,.18); }
+.lbd-match.lost::before { background: var(--red); }
+.lbd-match.pending { border-color: rgba(247,199,68,.18); }
+.lbd-match.pending::before { background: var(--accent); }
+
+/* cell base */
+.lbd-cell {
+  padding: .38rem .4rem;
+  font-size: .75rem;
+  line-height: 1.2;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* G# */
+.lbd-cell.c-num {
+  font-family: 'Bebas Neue', sans-serif; font-size: .7rem;
+  letter-spacing: 1px; color: var(--muted2); text-align: center;
+  padding-left: 6px;
+}
+
+/* équipes + score */
+.lbd-cell.c-match { display: flex; flex-direction: column; gap: 1px; padding-left: .5rem; }
+.lbd-matchup-str { font-size: .72rem; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; }
+.lbd-score-str {
+  font-family: 'Bebas Neue', sans-serif; font-size: .65rem; letter-spacing: .5px;
+  color: var(--muted2);
+}
+
+/* écart pill */
+.lbd-cell.c-diff { text-align: center; }
+.lbd-diff-pill {
+  display: inline-block; font-size: .62rem; font-weight: 700;
+  padding: 1px 6px; border-radius: 3px; border: 1px solid transparent;
+  white-space: nowrap;
+}
+.lbd-diff-pill.pts2 { background: rgba(46,204,113,.15); color: var(--green);  border-color: rgba(46,204,113,.3); }
+.lbd-diff-pill.pts1 { background: rgba(247,199,68,.15); color: #f7c744;       border-color: rgba(247,199,68,.3); }
+.lbd-diff-pill.pts0 { background: rgba(255,255,255,.05); color: var(--muted); border-color: var(--border2); }
+.lbd-diff-pill.nd   { color: var(--muted); border: none; font-style: italic; }
+
+/* pts */
+.lbd-cell.c-pts {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1rem;
+  letter-spacing: 1px; text-align: center;
+}
+.lbd-cell.c-pts.won  { color: var(--green); }
+.lbd-cell.c-pts.lost { color: var(--red); }
+.lbd-cell.c-pts.pending { color: var(--accent); }
+
+/* column headers inside detail */
+.lbd-col-head {
+  display: grid; grid-template-columns: 28px 1fr 70px 36px;
+  font-size: .55rem; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted); padding: .2rem .4rem .15rem; gap: 0;
+}
+.lbd-col-head > * { padding: 0 .4rem; text-align: center; }
+.lbd-col-head > :nth-child(2) { text-align: left; padding-left: .5rem; }
+
+.lbd-no-bets { font-size: .75rem; color: var(--muted); font-style: italic; padding: .6rem .2rem; }
+
+
+/* ─── PAST RESULTS ACCORDION ─── */
+.prr-others-toggle {
+  border-top: 1px solid var(--border); padding: .45rem 1rem;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none; transition: background .15s;
+  font-size: .7rem; letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
+}
+.prr-others-toggle:hover { background: rgba(255,255,255,.02); }
+.prr-others-toggle.open { background: rgba(255,255,255,.04); color: var(--accent); }
+.prr-others-toggle-arrow { font-size: .65rem; transition: transform .2s; }
+.prr-others-toggle.open .prr-others-toggle-arrow { transform: rotate(90deg); }
+
+.prr-others-content {
+  display: none; border-top: 1px solid var(--border);
+  background: rgba(0,0,0,.1); padding: .4rem 1rem .6rem;
+}
+.prr-others-toggle.open ~ .prr-others-content { display: block; }
+
+.prr-others-row {
+  display: grid; grid-template-columns: 1fr 50px 50px 36px;
+  gap: 6px; align-items: center;
+  padding: .35rem 0; font-size: .72rem;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.prr-others-row:last-child { border-bottom: none; }
+
+.pror-name { color: var(--muted2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pror-pick { font-family: 'Bebas Neue', sans-serif; font-size: .85rem; letter-spacing: 1px; color: var(--text); text-align: center; }
+.pror-diff { font-size: .68rem; color: var(--muted2); text-align: center; }
+.pror-pts {
+  font-family: 'Bebas Neue', sans-serif; font-size: .95rem; text-align: right;
+  letter-spacing: 1px;
+}
+.pror-pts.correct { color: var(--green); }
+.pror-pts.incorrect { color: var(--red); }
+.pror-pts.zero { color: var(--muted); }
+
+/* ─── SPURS ALERT MODAL ─── */
+.spurs-overlay {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
+  align-items: center; justify-content: center; padding: 1rem;
+}
+.spurs-overlay.open { display: flex; }
+.spurs-modal {
+  background: #0f0f1c; border: 2px solid var(--red);
+  border-radius: 14px; padding: 2rem 1.5rem 1.5rem;
+  max-width: 360px; width: 100%; text-align: center;
+  animation: shakeIn .35s ease;
+}
+@keyframes shakeIn {
+  0%   { transform: scale(.85) rotate(-1deg); opacity: 0; }
+  60%  { transform: scale(1.04) rotate(.5deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.spurs-emoji { font-size: 2.8rem; margin-bottom: .5rem; line-height: 1; }
+.spurs-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 3px;
+  color: var(--red); margin-bottom: .5rem;
+}
+.spurs-subtitle { font-size: .82rem; color: var(--muted2); line-height: 1.5; margin-bottom: 1.5rem; }
+.spurs-btn-confirm {
+  display: block; width: 100%; background: var(--red); color: #fff; border: none;
+  border-radius: 8px; padding: .75rem; font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem; letter-spacing: 2px; cursor: pointer; margin-bottom: .5rem;
+  transition: background .15s;
+}
+.spurs-btn-confirm:hover { background: #ff2244; }
+.spurs-btn-cancel {
+  display: block; width: 100%; background: rgba(46,204,113,.12); color: var(--green);
+  border: 1px solid rgba(46,204,113,.35); border-radius: 8px; padding: .75rem;
+  font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 2px;
+  cursor: pointer; transition: background .15s;
+}
+.spurs-btn-cancel:hover { background: rgba(46,204,113,.22); }
 
 /* ─── TOAST ─── */
 .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--card2); border: 1px solid var(--border2); border-radius: 7px; padding: .6rem 1.2rem; font-size: .8rem; z-index: 100; transition: transform .3s; white-space: nowrap; }
@@ -293,17 +510,27 @@ input[type="range"]::-webkit-slider-thumb {
     <div class="logo">NBA <span>PRONOS</span></div>
     <div class="logo-sub">Playoffs 2026</div>
 
-    <div class="sec-title">Nouveau joueur</div>
-    <div class="row">
-      <input type="text" id="inp-pseudo" placeholder="Ton pseudo…" maxlength="20" autocomplete="off">
-      <button class="btn" onclick="loginNew()">GO</button>
-    </div>
-
-    <div class="divider">ou rejoindre</div>
-
-    <div class="sec-title">Joueurs existants</div>
+    <!-- Players list first -->
+    <div class="sec-title" style="margin-top:1.5rem">Rejoindre une partie<span style="font-size:.65rem;letter-spacing:1px;color:var(--muted);font-weight:400"> · en tant que</span></div>
     <div class="users-list" id="users-list">
       <div class="note"><span class="spinner"></span> Chargement…</div>
+    </div>
+
+    <!-- New player toggle -->
+    <div class="new-player-toggle">
+      <button class="toggle-btn" onclick="toggleNewPlayer()">
+        <span>Me joindre à la fête</span>
+        <span class="toggle-arrow" id="toggle-arrow">▼</span>
+      </button>
+    </div>
+
+    <!-- New player form (hidden) -->
+    <div class="new-player-form" id="new-player-form">
+      <div class="sec-title">Ton pseudo</div>
+      <div class="row">
+        <input type="text" id="inp-pseudo" placeholder="Entre ton pseudo…" maxlength="20" autocomplete="off">
+        <button class="btn" onclick="loginNew()">Créer</button>
+      </div>
     </div>
   </div>
 </div>
@@ -338,21 +565,15 @@ input[type="range"]::-webkit-slider-thumb {
   </div>
 </div>
 
-<!-- ══════════ DETAIL DRAWER ══════════ -->
-<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer(event)">
-  <div class="drawer" id="drawer">
-    <div class="drawer-handle"></div>
-    <div class="drawer-header">
-      <div>
-        <div class="drawer-title" id="drawer-name">—</div>
-        <div style="font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted2)">Détail des pronos</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:.75rem">
-        <div><span class="drawer-pts" id="drawer-pts">0</span><span>pts</span></div>
-        <button class="btn-close" onclick="document.getElementById('drawer-overlay').classList.remove('open')">FERMER</button>
-      </div>
-    </div>
-    <div id="drawer-content"></div>
+
+<!-- ══════════ SPURS ALERT ══════════ -->
+<div class="spurs-overlay" id="spurs-overlay">
+  <div class="spurs-modal">
+    <div class="spurs-emoji">🚨</div>
+    <div class="spurs-title">Alerte au traître</div>
+    <div class="spurs-subtitle">Tu es sur le point de voter contre les Spurs.<br>Cette décision aura des conséquences.</div>
+    <button class="spurs-btn-confirm" id="spurs-btn-confirm">Trahir et en payer les conséquences</button>
+    <button class="spurs-btn-cancel" onclick="closeSPURS()">Je rigole, jamais de la vie</button>
   </div>
 </div>
 
@@ -654,6 +875,19 @@ function renderUsersList() {
   }).join('');
 }
 
+// ══════════════════════════════════════════
+//  LOGIN TOGGLE
+// ══════════════════════════════════════════
+function toggleNewPlayer() {
+  const form = document.getElementById('new-player-form');
+  const arrow = document.getElementById('toggle-arrow');
+  form.classList.toggle('open');
+  arrow.classList.toggle('open');
+  if (form.classList.contains('open')) {
+    document.getElementById('inp-pseudo').focus();
+  }
+}
+
 function loginNew() {
   const name = document.getElementById('inp-pseudo').value.trim();
   if (name.length < 2) { toast('Pseudo trop court'); return; }
@@ -744,15 +978,20 @@ function renderPronosTab() {
     let matchesHtml = '';
     s.matches.forEach(m => {
       const wName = m.winner === s.team1.abbr ? s.team1.name : s.team2.name;
-      const diff = Math.abs(m.score1 - m.score2);
+      const maxScore = Math.max(m.score1, m.score2);
+      const minScore = Math.min(m.score1, m.score2);
+      const matchKey = `${s.id}-g${m.num}`;
+      const myP = myPronos[matchKey];
+      const correct = myP && myP.winner === m.winner;
+      const cardState = !myP ? 'nobet' : correct ? 'won' : 'lost';
       matchesHtml += `
-        <div class="match-card past">
-          <div class="match-top">
+        <div class="match-card past ${cardState}">
+          <div class="match-official">
             <span class="match-gnum">MATCH ${m.num}</span>
-            <span class="match-result">
-              <span class="mw">${wName}</span>
-              <span class="ms">${Math.max(m.score1,m.score2)}–${Math.min(m.score1,m.score2)}</span>
-            </span>
+            <div class="match-score-display">
+              <span class="match-winner-name">${esc(wName)}</span>
+              <span class="match-score-pill">${maxScore}–${minScore}</span>
+            </div>
           </div>
           ${renderPastProno(s, m, myPronos)}
         </div>`;
@@ -767,18 +1006,22 @@ function renderPronosTab() {
 
       if (myP) {
         // Déjà parié → affiche mon prono + pronos des autres
+        const myPickAbbr = myP.winner === s.team1.abbr ? s.team1.abbr : s.team2.abbr;
         nextHtml = `
           <div class="match-card next">
-            <div class="match-top">
+            <div class="match-official">
               <span class="match-gnum">MATCH ${s.nextGame} <span style="color:var(--accent);font-size:.58rem;margin-left:4px">PROCHAIN</span></span>
-              <span class="match-result pending">À jouer</span>
+              <span class="match-result pending" style="font-style:italic;font-size:.72rem;color:var(--muted)">À jouer</span>
             </div>
             <div class="prono-view">
-              <div>
-                <div class="pv-pick pending">📌 ${myP.winner === s.team1.abbr ? s.team1.name : s.team2.name}</div>
-                <div class="pv-detail">± ${myP.diff} pts · verrouillé</div>
+              <div class="pv-my-label">Mon pari</div>
+              <div class="pv-pick-row">
+                <div class="pv-pick-info">
+                  <div class="pv-team-badge">${esc(myPickAbbr)}</div>
+                  <div class="pv-diff-badge">± <span>${myP.diff}</span> pts</div>
+                </div>
+                <div class="pv-lock">🔒</div>
               </div>
-              <div class="pv-icon">🔒</div>
             </div>
             ${othersHtml}
           </div>`;
@@ -846,17 +1089,100 @@ function renderPronosTab() {
 function renderPastProno(s, m, myPronos) {
   const matchKey = `${s.id}-g${m.num}`;
   const p = myPronos[matchKey];
-  if (!p) return '';
+
+  // Pas de pari posé sur ce match
+  if (!p) {
+    return `<div class="prono-result-row nobet">
+      <div class="prr-left">
+        <div class="prr-pick nobet"><span class="pick-label">Pas de pari posé</span></div>
+      </div>
+      <div class="prr-pts nobet">
+        <div class="pts-number">—</div>
+        <div class="pts-breakdown">0 pt</div>
+      </div>
+    </div>`;
+  }
+
   const correct = p.winner === m.winner;
   const actualDiff = Math.abs(m.score1 - m.score2);
-  const diffOk = Math.abs(p.diff - actualDiff) <= 3 ? 'exact' : Math.abs(p.diff - actualDiff) <= 7 ? 'proche' : '';
-  return `<div class="prono-view">
-    <div>
-      <div class="pv-pick ${correct?'correct':'wrong'}">${correct?'✓':'✗'} ${p.winner === s.team1.abbr ? s.team1.name : s.team2.name}</div>
-      <div class="pv-detail">Prédit ± ${p.diff} pts · Réel ${actualDiff} pts ${diffOk==='exact'?'🎯':diffOk==='proche'?'👍':''}</div>
+  const gap = Math.abs(p.diff - actualDiff);
+  const rowClass = correct ? 'won' : 'lost';
+
+  // Points
+  let pts = 0, diffPts = 0;
+  let diffTag = '', diffClass = '';
+  if (correct) {
+    pts = 3;
+    if (gap <= 3)      { diffPts = 2; diffTag = '🎯 Exact'; diffClass = 'exact'; }
+    else if (gap <= 7) { diffPts = 1; diffTag = '👍 Proche'; diffClass = 'close'; }
+    else               { diffTag = `±${gap} pts`;             diffClass = 'far'; }
+    pts += diffPts;
+  } else {
+    diffTag = `±${gap} pts`; diffClass = 'far';
+  }
+
+  const pickName = p.winner === s.team1.abbr ? s.team1.name : s.team2.name;
+  const icon = correct ? '✅' : '❌';
+  const breakdown = correct
+    ? `+3${diffPts > 0 ? ` +${diffPts}` : ''}`
+    : '0';
+
+  // Build others results section
+  const othersResults = Object.keys(db.users)
+    .filter(uid => uid !== currentUser)
+    .map(uid => {
+      const up = db.pronos[uid] || {};
+      const op = up[matchKey];
+      if (!op) return null;
+      const oCorrect = op.winner === m.winner;
+      const oActualDiff = Math.abs(m.score1 - m.score2);
+      const oGap = Math.abs(op.diff - oActualDiff);
+      let oPts = 0;
+      if (oCorrect) {
+        oPts = 3;
+        if (oGap <= 3) oPts += 2;
+        else if (oGap <= 7) oPts += 1;
+      }
+      const oAbbr = op.winner === s.team1.abbr ? s.team1.abbr : s.team2.abbr;
+      return { uid, name: db.users[uid].name, pick: oAbbr, diff: op.diff, pts: oPts, correct: oCorrect };
+    })
+    .filter(x => x);
+
+  const othersAccordion = othersResults.length === 0 ? '' : `
+    <div class="prr-others-toggle" onclick="this.classList.toggle('open')">
+      <span>👥 Voir les résultats des autres (${othersResults.length})</span>
+      <span class="prr-others-toggle-arrow">›</span>
     </div>
-    <div class="pv-icon">${correct?'🎯':'💀'}</div>
-  </div>`;
+    <div class="prr-others-content">
+      ${othersResults.map(o => `
+        <div class="prr-others-row">
+          <span class="pror-name">${esc(o.name)}</span>
+          <span class="pror-pick">${esc(o.pick)}</span>
+          <span class="pror-diff">±${o.diff}</span>
+          <span class="pror-pts ${o.correct ? 'correct' : o.pts > 0 ? 'correct' : 'zero'}">${o.correct ? '+' + o.pts : '0'}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  return `<div class="prono-result-row ${rowClass}">
+    <div class="prr-left">
+      <div class="prr-pick ${rowClass}">
+        <span class="pick-icon">${icon}</span>
+        <span class="pick-label">${esc(pickName)}</span>
+      </div>
+      <div class="prr-diff">
+        <span class="diff-predicted">Prédit ±${p.diff}</span>
+        <span style="color:var(--border2)">·</span>
+        <span class="diff-actual">Réel ${actualDiff}</span>
+        <span class="diff-gap-tag ${diffClass}">${diffTag}</span>
+      </div>
+    </div>
+    <div class="prr-pts ${rowClass}">
+      <div class="pts-number">${correct ? '+' + pts : '0'}</div>
+      <div class="pts-breakdown">${breakdown}</div>
+    </div>
+  </div>${othersAccordion}`;
 }
 
 // Affiche les pronos des autres sur le prochain match (visible seulement si j'ai parié)
@@ -867,16 +1193,27 @@ function renderOthersPronos(s, matchKey, myProno) {
     .map(uid => ({ uid, name: db.users[uid].name, p: (db.pronos[uid]||{})[matchKey] }))
     .filter(u => u.p);
 
-  if (!others.length) return `<div style="padding:.6rem 1rem;font-size:.7rem;color:var(--muted)">Aucun autre joueur n'a encore parié.</div>`;
+  if (!others.length) {
+    return `<div class="others-block">
+      <div class="others-title">Paris des autres joueurs</div>
+      <div style="padding:.45rem 1rem .65rem;font-size:.72rem;color:var(--muted);font-style:italic">Aucun autre pari pour l'instant.</div>
+    </div>`;
+  }
 
-  const rows = others.map(u => `
-    <div class="others-row">
+  const rows = others.map(u => {
+    const abbr = u.p.winner === s.team1.abbr ? s.team1.abbr : s.team2.abbr;
+    return `<div class="others-row">
       <span class="or-name">${esc(u.name)}</span>
-      <span class="or-pick pending">${u.p.winner === s.team1.abbr ? s.team1.name : s.team2.name}</span>
-      <span class="or-diff">± ${u.p.diff} pts</span>
-    </div>`).join('');
+      <span class="or-pick">${esc(abbr)}</span>
+      <span class="or-diff">±${u.p.diff} pts</span>
+    </div>`;
+  }).join('');
 
-  return `<div class="others-block">${rows}</div>`;
+  return `<div class="others-block">
+    <div class="others-title">Paris des autres joueurs</div>
+    <div class="others-head"><span>Joueur</span><span style="text-align:center">Pari</span><span style="text-align:right">Écart</span></div>
+    ${rows}
+  </div>`;
 }
 
 // ══════════════════════════════════════════
@@ -892,14 +1229,44 @@ function pickW(matchKey, team, btn) {
   btn.classList.add('sel');
 }
 
+// pending bet for Spurs confirmation
+let _pendingBet = null;
+
 async function submitBet(seriesId, matchKey) {
   const f = formState[matchKey] || {};
   if (!f.winner) { toast('Choisis un vainqueur !'); return; }
+
+  // Spurs check: if opponent of SAS is chosen (i.e. betting against SAS in a series involving SAS)
+  const s = SERIES.find(x => x.id === seriesId);
+  const involvesSAS = s && (s.team1.abbr === 'SAS' || s.team2.abbr === 'SAS');
+  const bettingAgainstSAS = involvesSAS && f.winner !== 'SAS';
+
+  if (bettingAgainstSAS) {
+    _pendingBet = { matchKey, seriesId };
+    document.getElementById('spurs-btn-confirm').onclick = () => confirmBet(matchKey);
+    document.getElementById('spurs-overlay').classList.add('open');
+    return;
+  }
+
+  await _doSaveBet(matchKey);
+}
+
+function closeSPURS() {
+  document.getElementById('spurs-overlay').classList.remove('open');
+  _pendingBet = null;
+}
+
+async function confirmBet(matchKey) {
+  closeSPURS();
+  await _doSaveBet(matchKey);
+}
+
+async function _doSaveBet(matchKey) {
+  const f = formState[matchKey] || {};
   const diff = parseInt(document.getElementById('rng-' + matchKey)?.value || 8);
   if (!db.pronos[currentUser]) db.pronos[currentUser] = {};
   db.pronos[currentUser][matchKey] = { winner: f.winner, diff, ts: Date.now() };
   await dbWrite();
-  // flash puis re-render
   const fl = document.getElementById('fl-' + matchKey);
   if (fl) { fl.classList.add('show'); }
   setTimeout(() => renderPronosTab(), 400);
@@ -962,136 +1329,118 @@ function renderLeaderboard() {
     return;
   }
 
-  const rows = users.map((u,i) => `
-    <div class="lb-row ${u.uid===currentUser?'me':''}" onclick="openDrawer('${u.uid}')">
-      <div class="lb-rank ${i<3?'top':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
-      <div class="lb-name lb-name-arrow">${esc(u.name)}${u.uid===currentUser?' <span style="color:var(--muted);font-size:.7rem">(moi)</span>':''}</div>
-      <div class="lb-c">${u.bets}</div>
-      <div class="lb-c pts">${u.pts}</div>
-    </div>`).join('');
+  const entries = users.map((u,i) => {
+    const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;
+    const meTag = u.uid===currentUser ? ' <span style="color:var(--muted);font-size:.68rem">(moi)</span>' : '';
+    return `<div class="lb-entry${u.uid===currentUser?' me':''}" id="lbe-${u.uid}">
+      <div class="lb-row" onclick="toggleAccordion('${u.uid}')">
+        <div class="lb-rank ${i<3?'top':''}">${medal}</div>
+        <div class="lb-name">${esc(u.name)}${meTag}</div>
+        <div class="lb-pts">${u.pts}</div>
+        <div class="lb-chevron">›</div>
+      </div>
+      <div class="lb-detail" id="lbd-${u.uid}"></div>
+    </div>`;
+  }).join('');
 
   el.innerHTML = `<div class="lb-table">
-    <div class="lb-head"><div>#</div><div>Joueur</div><div>Paris</div><div>Pts</div></div>
-    ${rows}
+    <div class="lb-head"><div>#</div><div>Joueur</div><div>Pts</div><div></div></div>
+    ${entries}
   </div>`;
 }
 
-// ══════════════════════════════════════════
-//  DETAIL DRAWER
-// ══════════════════════════════════════════
-function openDrawer(uid) {
-  const user = db.users[uid];
-  if (!user) return;
-  const { totalPts, detail } = calcScoreDetail(uid);
+function toggleAccordion(uid) {
+  const entry = document.getElementById('lbe-' + uid);
+  const detail = document.getElementById('lbd-' + uid);
+  const isOpen = entry.classList.contains('open');
 
-  document.getElementById('drawer-name').textContent = user.name + (uid === currentUser ? ' (moi)' : '');
-  document.getElementById('drawer-pts').textContent = totalPts;
+  // Ferme tous les autres
+  document.querySelectorAll('.lb-entry.open').forEach(e => e.classList.remove('open'));
+
+  if (!isOpen) {
+    entry.classList.add('open');
+    if (!detail.innerHTML) detail.innerHTML = buildDetailHTML(uid);
+    // Scroll doux vers la ligne
+    setTimeout(() => entry.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+  }
+}
+
+function buildDetailHTML(uid) {
+  const { detail } = calcScoreDetail(uid);
+  if (!detail.length) return '<div class="lbd-no-bets">Aucun pari posé.</div>';
 
   // Groupe par série
   const bySeries = {};
   detail.forEach(d => {
-    const sid = d.series.id;
-    if (!bySeries[sid]) bySeries[sid] = [];
-    bySeries[sid].push(d);
+    if (!bySeries[d.series.id]) bySeries[d.series.id] = [];
+    bySeries[d.series.id].push(d);
   });
 
-  let html = '';
+  // Column header row (shown once)
+  const colHead = `<div class="lbd-col-head">
+    <div></div><div>Match · Score · Pari</div><div>Écart</div><div>Pts</div>
+  </div>`;
 
-  if (!detail.length) {
-    html = '<div style="padding:2rem;text-align:center;color:var(--muted);font-size:.82rem">Aucun pari enregistré.</div>';
-  } else {
-    Object.keys(bySeries).forEach(sid => {
-      const items = bySeries[sid];
-      const s = items[0].series;
-      html += `<div class="detail-section">
-        <div class="detail-section-title">${s.label}</div>`;
+  let html = colHead;
+  Object.keys(bySeries).forEach(sid => {
+    const items = bySeries[sid].sort((a,b) => a.matchNum - b.matchNum);
+    const s = items[0].series;
+    html += `<div class="lbd-series-title">${s.label}</div>`;
 
-      items.sort((a,b) => a.matchNum - b.matchNum).forEach(item => {
-        const { match, prono, pts, diffPts, actual, d, resultKnown } = item;
-        const pickName = prono.winner === s.team1.abbr ? s.team1.name : s.team2.name;
+    items.forEach(item => {
+      const { match, prono, pts, diffPts, actual, d, resultKnown } = item;
+      const s = item.series;
+      const pickAbbr = prono.winner === s.team1.abbr ? s.team1.abbr : s.team2.abbr;
+      const pickName = prono.winner === s.team1.abbr ? s.team1.name : s.team2.name;
+      const oppAbbr  = prono.winner === s.team1.abbr ? s.team2.abbr : s.team1.abbr;
 
-        if (!resultKnown) {
-          // Match à venir
-          html += `<div class="detail-row pending">
-            <div class="dr-match">
-              <div class="dr-label">Match ${item.matchNum} · À jouer</div>
-              <div class="dr-pick nd">📌 ${esc(pickName)}</div>
-            </div>
-            <div class="dr-diff-col">
-              <div class="dr-diff-predicted">± ${prono.diff} pts</div>
-              <div class="dr-diff-actual">Prédit</div>
-            </div>
-            <div class="dr-gap"><span class="gap-pill nd">—</span></div>
-            <div class="dr-pts-col"><span class="dr-pts-val nd">?</span></div>
-          </div>`;
-          return;
-        }
-
-        const correct = prono.winner === match.winner;
-        const rowClass = correct ? 'correct' : 'wrong';
-        const pickClass = correct ? 'ok' : 'ko';
-        const icon = correct ? '✓' : '✗';
-        const actualDiff = actual;
-
-        let gapLabel = ''; let gapClass = '';
-        if (correct) {
-          if (d <= 3)      { gapLabel = `±${d} 🎯`; gapClass = 'exact'; }
-          else if (d <= 7) { gapLabel = `±${d} 👍`; gapClass = 'close'; }
-          else             { gapLabel = `±${d}`;     gapClass = 'far'; }
-        } else {
-          gapLabel = `±${d}`; gapClass = 'far';
-        }
-
-        const ptsDisplay = pts > 0
-          ? `<span class="dr-pts-val pos">+${pts}</span>`
-          : `<span class="dr-pts-val zero">0</span>`;
-
-        const breakdown = correct
-          ? `<div style="font-size:.6rem;color:var(--muted);margin-top:2px">Victoire +3${diffPts>0?' · Écart +'+diffPts:''}</div>`
-          : '';
-
-        html += `<div class="detail-row ${rowClass}">
-          <div class="dr-match">
-            <div class="dr-label">Match ${item.matchNum} · Réel: ${Math.max(match.score1,match.score2)}–${Math.min(match.score1,match.score2)}</div>
-            <div class="dr-pick ${pickClass}">${icon} ${esc(pickName)}</div>
-            ${breakdown}
+      if (!resultKnown) {
+        // Match à venir — une seule ligne compacte
+        html += `<div class="lbd-match pending">
+          <div class="lbd-cell c-num">G${item.matchNum}</div>
+          <div class="lbd-cell c-match">
+            <span class="lbd-matchup-str">${esc(s.team1.abbr)} <span style="color:var(--muted);font-size:.62rem">vs</span> ${esc(s.team2.abbr)}</span>
+            <span class="lbd-score-str" style="color:var(--accent)">📌 ${esc(pickAbbr)} · À jouer</span>
           </div>
-          <div class="dr-diff-col">
-            <div class="dr-diff-predicted">± ${prono.diff} pts</div>
-            <div class="dr-diff-actual">Réel: ${actualDiff} pts</div>
-          </div>
-          <div class="dr-gap"><span class="gap-pill ${gapClass}">${gapLabel}</span></div>
-          <div class="dr-pts-col">${ptsDisplay}</div>
+          <div class="lbd-cell c-diff"><span class="lbd-diff-pill nd">±${prono.diff}</span></div>
+          <div class="lbd-cell c-pts pending">?</div>
         </div>`;
-      });
+        return;
+      }
 
-      // Sous-total série
-      const seriesPts = items.filter(i=>i.resultKnown).reduce((a,i)=>a+(i.pts||0),0);
-      const hasPending = items.some(i=>!i.resultKnown);
-      html += `<div class="dr-total-row">
-        <span>Sous-total ${s.label.split(' ').slice(-1)[0]}</span>
-        <span class="dr-total-pts">+${seriesPts} pts</span>
+      const correct = prono.winner === match.winner;
+      const winAbbr  = match.winner === s.team1.abbr ? s.team1.abbr : s.team2.abbr;
+      const loseAbbr = match.winner === s.team1.abbr ? s.team2.abbr : s.team1.abbr;
+      const maxS = Math.max(match.score1, match.score2);
+      const minS = Math.min(match.score1, match.score2);
+      const state = correct ? 'won' : 'lost';
+      const icon  = correct ? '✓' : '✗';
+
+      // Diff pill
+      let diffClass = 'pts0', diffLabel = `±${prono.diff}`;
+      if (correct) {
+        if (diffPts === 2)      { diffClass = 'pts2'; diffLabel = `±${prono.diff} 🎯`; }
+        else if (diffPts === 1) { diffClass = 'pts1'; diffLabel = `±${prono.diff} 👍`; }
+      }
+
+      const ptsNum = pts > 0 ? `+${pts}` : '0';
+
+      // matchup string: winner in accent, loser muted
+      const mu = `<span style="color:${correct?'var(--green)':'var(--red)'};font-weight:700">${esc(winAbbr)}</span> <span style="color:var(--muted2);font-size:.65rem">${esc(loseAbbr)}</span>`;
+
+      html += `<div class="lbd-match ${state}">
+        <div class="lbd-cell c-num">${icon}</div>
+        <div class="lbd-cell c-match">
+          <span class="lbd-matchup-str">${mu}</span>
+          <span class="lbd-score-str">${maxS}–${minS} · ${esc(pickAbbr)}</span>
+        </div>
+        <div class="lbd-cell c-diff"><span class="lbd-diff-pill ${diffClass}">${diffLabel}</span></div>
+        <div class="lbd-cell c-pts ${state}">${ptsNum}</div>
       </div>`;
-      if (hasPending) html += `<div class="dr-pending-note" style="padding:0 .75rem .5rem">* Paris en attente non comptabilisés</div>`;
-
-      html += `</div>`; // close detail-section
     });
+  });
 
-    // Total général
-    html += `<div style="margin:.75rem 1.25rem 0;padding:.9rem 1rem;background:rgba(247,199,68,.06);border:1px solid rgba(247,199,68,.2);border-radius:8px;display:flex;justify-content:space-between;align-items:center">
-      <span style="font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted2)">Total général</span>
-      <span style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--accent);letter-spacing:1px">${totalPts} <span style="font-size:.7rem;font-family:'DM Sans',sans-serif;color:var(--muted2)">pts</span></span>
-    </div>`;
-  }
-
-  document.getElementById('drawer-content').innerHTML = html;
-  document.getElementById('drawer-overlay').classList.add('open');
-}
-
-function closeDrawer(e) {
-  if (e.target === document.getElementById('drawer-overlay')) {
-    document.getElementById('drawer-overlay').classList.remove('open');
-  }
+  return html;
 }
 
 // ══════════════════════════════════════════
@@ -1109,7 +1458,7 @@ function toast(msg) {
 //  BOOT
 // ══════════════════════════════════════════
 if (IS_DEV) document.getElementById('dev-badge').style.display = 'inline';
-document.getElementById('inp-pseudo').addEventListener('keydown', e => { if(e.key==='Enter') loginNew(); });
+document.getElementById('inp-pseudo').addEventListener('keydown', e => { if(e.key==='Enter') { e.preventDefault(); loginNew(); } });
 initLogin();
 </script>
 </body>
