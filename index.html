@@ -1051,6 +1051,8 @@ function enterApp(uid) {
   document.getElementById('hdr-av').textContent = name[0].toUpperCase();
   document.getElementById('screen-login').classList.remove('active');
   document.getElementById('screen-app').classList.add('active');
+  window.scrollTo(0, 0);
+  positionTabs();
   renderPronosTab();
 }
 
