@@ -98,24 +98,58 @@ input[type="text"]::placeholder { color: var(--muted); }
 .app-header {
   padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; background: rgba(8,8,16,.96);
+  position: fixed; top: 0; left: 0; right: 0;
+  background: rgba(8,8,16,.96);
   backdrop-filter: blur(10px); z-index: 20;
 }
 .app-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 3px; }
 .app-logo span { color: var(--accent); }
-.user-pill { display: flex; align-items: center; gap: .45rem; }
+.user-pill {
+  display: flex; align-items: center; gap: .45rem;
+  padding: .3rem .6rem; border-radius: 8px;
+  transition: background .15s, color .15s;
+}
+.user-pill:hover {
+  background: rgba(247,199,68,.08);
+}
+.user-pill:hover .uname {
+  color: var(--accent);
+}
 .avatar { width: 26px; height: 26px; background: var(--accent); color: #08080f; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: .85rem; }
-.uname { font-size: .8rem; color: var(--muted2); }
+.uname { font-size: .8rem; color: var(--muted2); transition: color .15s; }
 .btn-sm { background: none; border: 1px solid var(--border2); color: var(--muted2); font-size: .62rem; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 5px; padding: .28rem .6rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: border-color .15s, color .15s; }
 .btn-sm:hover { border-color: var(--red); color: var(--red); }
 
 /* ─── CONTENT ─── */
-.app-content { flex: 1; max-width: 760px; margin: 0 auto; width: 100%; padding: 1.75rem 1.25rem 4rem; }
+.app-content { flex: 1; max-width: 760px; margin: 0 auto; width: 100%; padding: 5.5rem 1.25rem 4rem; position: relative; }
 
 /* ─── TABS ─── */
-.tabs { display: flex; gap: 4px; background: var(--card2); border: 1px solid var(--border); border-radius: 9px; padding: 3px; margin-bottom: 1.75rem; }
-.tab { flex: 1; background: transparent; border: none; color: var(--muted2); font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 500; padding: .5rem; border-radius: 7px; cursor: pointer; transition: background .15s, color .15s; }
-.tab.active { background: var(--border2); color: var(--text); }
+.app-tabs {
+  display: flex; gap: 0; background: var(--card2);
+  border-bottom: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  padding: 0 1rem;
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  z-index: 15;
+}
+.tab {
+  flex: 1; background: transparent; border: none; color: var(--muted2);
+  font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 500;
+  padding: .65rem 1rem; cursor: pointer;
+  transition: background .15s, color .15s;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  text-align: center;
+}
+.tab:hover { background: rgba(255,255,255,.04); }
+.tab.active {
+  background: transparent; color: var(--accent);
+  border-bottom-color: var(--accent);
+}
 
 /* ─── SECTION LABEL ─── */
 .sec-label { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px; color: var(--accent); margin-bottom: .9rem; display: flex; align-items: center; gap: .6rem; }
@@ -241,24 +275,26 @@ input[type="range"]::-webkit-slider-thumb {
 /* prono locked (next game, submitted) */
 .prono-view {
   border-top: 1px solid var(--border);
-  padding: .85rem 1rem .75rem;
+  padding: .75rem 1rem;
   background: rgba(247,199,68,.03);
 }
-.pv-my-label { font-size: .58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
-.pv-pick-row { display: flex; align-items: center; justify-content: space-between; }
-.pv-pick-info { display: flex; align-items: center; gap: .6rem; }
-.pv-team-badge {
-  background: rgba(247,199,68,.12); border: 1px solid rgba(247,199,68,.3);
-  border-radius: 7px; padding: .35rem .75rem;
-  font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 1.5px; color: var(--accent);
+.pv-my-label { font-size: .58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: .45rem; }
+.pv-pick-row {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: .75rem; align-items: center;
+}
+.pv-pick-info { display: flex; align-items: center; gap: .5rem; }
+.pv-team-name {
+  font-size: .82rem; font-weight: 600; color: var(--text);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .pv-diff-badge {
   background: var(--border2); border: 1px solid var(--border2);
-  border-radius: 7px; padding: .35rem .65rem;
-  font-size: .78rem; color: var(--muted2);
+  border-radius: 7px; padding: .3rem .6rem;
+  font-size: .72rem; color: var(--muted2); white-space: nowrap;
 }
-.pv-diff-badge span { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: var(--text); letter-spacing: 1px; }
-.pv-lock { font-size: 1rem; color: var(--muted); }
+.pv-diff-badge span { font-family: 'Bebas Neue', sans-serif; font-size: .95rem; color: var(--text); letter-spacing: 1px; }
+.pv-lock { font-size: .9rem; color: var(--muted); }
 
 /* others pronos table */
 .others-block { border-top: 1px solid var(--border); }
@@ -413,6 +449,75 @@ input[type="range"]::-webkit-slider-thumb {
 .lbd-no-bets { font-size: .75rem; color: var(--muted); font-style: italic; padding: .6rem .2rem; }
 
 
+
+/* ─── NEXT OTHERS ACCORDION ─── */
+.npo-accordion { border-top: 1px solid var(--border); }
+.npo-toggle {
+  padding: .5rem 1rem; display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none; transition: background .15s;
+  font-size: .7rem; letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
+}
+.npo-toggle:hover { background: rgba(255,255,255,.02); }
+.npo-toggle.open { color: var(--accent); background: rgba(255,255,255,.03); }
+.npo-arrow { font-size: .65rem; transition: transform .2s; }
+.npo-arrow.open { transform: rotate(90deg); }
+.npo-content {
+  display: none; background: rgba(0,0,0,.08); padding: .35rem 1rem .55rem;
+}
+.npo-content.show { display: block; }
+.npo-head {
+  display: grid; grid-template-columns: 1fr 50px 50px;
+  gap: 6px; font-size: .58rem; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: .3rem;
+}
+
+
+
+
+.match-in-progress { padding: 1rem; background: rgba(232,69,96,.08); border: 1px solid rgba(232,69,96,.15); border-radius: 10px; text-align: center; }
+.match-in-progress-msg { font-size: .85rem; color: var(--red); font-weight: 600; letter-spacing: 1px; }
+
+
+/* ─── BET FORM CARD (yellow context) ─── */
+.match-card.bet-open {
+  background: var(--card);
+  border-color: var(--accent);
+}
+.match-card.bet-open .match-official {
+  background: rgba(247,199,68,.12);
+  border-bottom: 1px solid rgba(247,199,68,.25);
+}
+.match-card.bet-open .match-gnum { color: rgba(247,199,68,.5); }
+.match-card.bet-open .match-prono { background: transparent; border-top: 1px solid rgba(247,199,68,.15); }
+.match-card.bet-open .mp-label { color: rgba(247,199,68,.7); }
+
+/* pick buttons on bet-open card */
+.match-card.bet-open .pick-btn {
+  border-color: var(--border2);
+  color: var(--muted2);
+  background: transparent;
+}
+.match-card.bet-open .pick-btn:hover {
+  border-color: var(--accent); color: var(--accent);
+}
+.match-card.bet-open .pick-btn.sel {
+  background: var(--accent); border-color: var(--accent); color: #08080f; font-weight: 700;
+}
+
+/* range on bet-open card */
+.match-card.bet-open .range-val { color: var(--accent); }
+.match-card.bet-open input[type="range"] { background: var(--border2); }
+.match-card.bet-open .range-ends { color: var(--muted); }
+
+/* submit button */
+.match-card.bet-open .btn {
+  background: var(--accent); color: #08080f; font-weight: 700;
+}
+.match-card.bet-open .btn:hover { background: #ffd966; }
+
+/* flash */
+.match-card.bet-open .flash { color: var(--green); }
+
 /* ─── PAST RESULTS ACCORDION ─── */
 .prr-others-toggle {
   border-top: 1px solid var(--border); padding: .45rem 1rem;
@@ -536,22 +641,21 @@ input[type="range"]::-webkit-slider-thumb {
 </div>
 
 <!-- ══════════ APP ══════════ -->
-<div id="screen-app" class="screen">
+<div id="screen-app" class="screen" style="position:relative">
   <div class="app-header">
     <div class="app-logo">NBA <span>PRONOS</span><span id="dev-badge" style="display:none;font-size:.55rem;letter-spacing:2px;background:#e84560;color:#fff;border-radius:3px;padding:2px 7px;margin-left:8px;vertical-align:middle">DEV</span></div>
-    <div class="user-pill">
+    <div class="user-pill" style="cursor:pointer" onclick="logout()" title="Changer de compte">
       <div class="avatar" id="hdr-av">?</div>
       <span class="uname" id="hdr-name">—</span>
-      <button class="btn-sm" onclick="logout()">Changer</button>
     </div>
   </div>
 
-  <div class="app-content">
-    <div class="tabs">
-      <button class="tab active" onclick="setTab('pronos',this)">🏀 Mes Paris</button>
-      <button class="tab" onclick="setTab('board',this)">🏆 Classement</button>
-    </div>
+  <div class="app-tabs">
+    <button class="tab active" onclick="setTab('pronos',this)">🏀 Mes Paris</button>
+    <button class="tab" onclick="setTab('board',this)">🏆 Classement</button>
+  </div>
 
+  <div class="app-content">
     <div id="tab-pronos">
       <div id="pronos-container"><div style="text-align:center;padding:3rem"><span class="spinner"></span></div></div>
     </div>
@@ -655,6 +759,28 @@ const SERIES_INIT = [
   },
 ];
 
+
+// Match kickoff times (heure de début réelle)
+
+
+
+function getTimeUntilMatch(dateStr) {
+  if (!dateStr) return { remaining: -1, display: '--j --:--:--', expired: false };
+  const kickoff = new Date(dateStr);
+  const now = new Date();
+  const diff = kickoff - now;
+  if (diff <= 0) return { remaining: 0, display: 'Match commencé', expired: true };
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+  const secs = Math.floor((diff % 60000) / 1000);
+  const display = String(days) + 'j ' + String(hours).padStart(2,'0') + ':' + String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
+  return { remaining: diff, display: display, expired: false };
+}
+
+// Store match dates extracted from API
+const MATCH_DATES = {};
+
 // ══════════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════════
@@ -662,6 +788,12 @@ let currentUser = null;
 let db = { users: {}, pronos: {} };
 // pronos[uid][matchId] = { winner: 'NYK'|'CLE', diff: 8 }
 let SERIES = JSON.parse(JSON.stringify(SERIES_INIT));
+
+// Match kickoff times (UTC)
+
+
+
+
 
 // ══════════════════════════════════════════
 //  JSONBIN
@@ -749,6 +881,18 @@ function applyLiveData(games) {
     g.status === 'Final' &&
     (g.home_team_score > 0 || g.visitor_team_score > 0)
   );
+  
+  // Aussi on extrait les dates de TOUS les matchs (même pas terminés) pour le countdown
+  games.forEach(g => {
+    if (g.date && g.home_team && g.visitor_team) {
+      const ha = TEAM_ABBR[g.home_team.full_name];
+      const va = TEAM_ABBR[g.visitor_team.full_name];
+      if (ha && va) {
+        const key = ha < va ? ha + '-' + va : va + '-' + ha;  // key unique pour la paire
+        MATCH_DATES[key] = g.date;
+      }
+    }
+  });
 
   // Groupe par série (paire d'équipes) — trié par date pour avoir le bon numéro de match
   finished.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -775,6 +919,7 @@ function applyLiveData(games) {
       const winner = score1 > score2 ? s.team1.abbr : s.team2.abbr;
       const num = idx + 1;
       s.matches.push({ id: `${s.id}-g${num}`, num, winner, score1, score2 });
+
     });
   });
 
@@ -878,15 +1023,7 @@ function renderUsersList() {
 // ══════════════════════════════════════════
 //  LOGIN TOGGLE
 // ══════════════════════════════════════════
-function toggleNewPlayer() {
-  const form = document.getElementById('new-player-form');
-  const arrow = document.getElementById('toggle-arrow');
-  form.classList.toggle('open');
-  arrow.classList.toggle('open');
-  if (form.classList.contains('open')) {
-    document.getElementById('inp-pseudo').focus();
-  }
-}
+
 
 function loginNew() {
   const name = document.getElementById('inp-pseudo').value.trim();
@@ -1006,7 +1143,7 @@ function renderPronosTab() {
 
       if (myP) {
         // Déjà parié → affiche mon prono + pronos des autres
-        const myPickAbbr = myP.winner === s.team1.abbr ? s.team1.abbr : s.team2.abbr;
+        const myPickTeam = myP.winner === s.team1.abbr ? s.team1.name : s.team2.name;
         nextHtml = `
           <div class="match-card next">
             <div class="match-official">
@@ -1014,24 +1151,23 @@ function renderPronosTab() {
               <span class="match-result pending" style="font-style:italic;font-size:.72rem;color:var(--muted)">À jouer</span>
             </div>
             <div class="prono-view">
-              <div class="pv-my-label">Mon pari</div>
               <div class="pv-pick-row">
                 <div class="pv-pick-info">
-                  <div class="pv-team-badge">${esc(myPickAbbr)}</div>
+                  <div class="pv-team-name" style="color:var(--accent);font-weight:700">${esc(myPickTeam)}</div>
                   <div class="pv-diff-badge">± <span>${myP.diff}</span> pts</div>
                 </div>
                 <div class="pv-lock">🔒</div>
               </div>
             </div>
-            ${othersHtml}
+            ${renderNextOthersPronos(s, matchKey, myP)}
           </div>`;
       } else {
-        // Formulaire
+        // Formulaire pour parier
         nextHtml = `
-          <div class="match-card next">
-            <div class="match-top">
-              <span class="match-gnum">MATCH ${s.nextGame} <span style="color:var(--accent);font-size:.58rem;margin-left:4px">PROCHAIN</span></span>
-              <span class="match-result pending">À jouer — fais ton pari !</span>
+          <div class="match-card next bet-open">
+            <div class="match-official">
+              <span class="match-gnum">MATCH ${s.nextGame}</span>
+              <span style="font-size:.72rem;color:var(--accent);font-weight:700;letter-spacing:2px">⚡ PLACE TON PARI</span>
             </div>
             <div class="match-prono">
               <div class="mp-label">Qui va gagner ?</div>
@@ -1053,7 +1189,8 @@ function renderPronosTab() {
                 <button class="btn" onclick="submitBet('${s.id}','${matchKey}')">VALIDER</button>
               </div>
             </div>
-          </div>`;
+          </div>
+        </div>`;
       }
     } else {
       nextHtml = `
@@ -1084,6 +1221,7 @@ function renderPronosTab() {
 
   document.getElementById('pronos-container').innerHTML = html;
 }
+
 
 // Affiche mon prono sur un match passé (avec résultat)
 function renderPastProno(s, m, myPronos) {
@@ -1185,7 +1323,7 @@ function renderPastProno(s, m, myPronos) {
   </div>${othersAccordion}`;
 }
 
-// Affiche les pronos des autres sur le prochain match (visible seulement si j'ai parié)
+// For upcoming matches (form/locked view)
 function renderOthersPronos(s, matchKey, myProno) {
   if (!myProno) return '';
   const others = Object.keys(db.users)
@@ -1214,6 +1352,47 @@ function renderOthersPronos(s, matchKey, myProno) {
     <div class="others-head"><span>Joueur</span><span style="text-align:center">Pari</span><span style="text-align:right">Écart</span></div>
     ${rows}
   </div>`;
+}
+
+// For locked view with accordion
+function renderNextOthersPronos(s, matchKey, myProno) {
+  if (!myProno) return '';
+  const others = Object.keys(db.users)
+    .filter(uid => uid !== currentUser)
+    .map(uid => ({ uid, name: db.users[uid].name, p: (db.pronos[uid]||{})[matchKey] }))
+    .filter(u => u.p);
+
+  if (!others.length) {
+    return `<div style="border-top:1px solid var(--border);padding:.5rem 1rem;font-size:.72rem;color:var(--muted);font-style:italic">Aucun autre pari pour l'instant.</div>`;
+  }
+
+  const accordionId = 'acc-' + matchKey;
+  const rows = others.map(u => {
+    const abbr = u.p.winner === s.team1.abbr ? s.team1.abbr : s.team2.abbr;
+    return `<div class="others-row">
+      <span class="or-name">${esc(u.name)}</span>
+      <span class="or-pick">${esc(abbr)}</span>
+      <span class="or-diff">±${u.p.diff} pts</span>
+    </div>`;
+  }).join('');
+
+  return `<div class="npo-accordion" id="${accordionId}">
+    <div class="npo-toggle" onclick="toggleNextOthersAccord('${accordionId}')">
+      <span>👥 Paris des autres (${others.length})</span>
+      <span class="npo-arrow">›</span>
+    </div>
+    <div class="npo-content">
+      <div class="npo-head"><span>Joueur</span><span>Pari</span><span>Écart</span></div>
+      ${rows}
+    </div>
+  </div>`;
+}
+
+function toggleNextOthersAccord(id) {
+  const toggle = document.querySelector('#' + id + ' .npo-toggle');
+  const content = document.querySelector('#' + id + ' .npo-content');
+  toggle.classList.toggle('open');
+  content.classList.toggle('show');
 }
 
 // ══════════════════════════════════════════
@@ -1269,7 +1448,22 @@ async function _doSaveBet(matchKey) {
   await dbWrite();
   const fl = document.getElementById('fl-' + matchKey);
   if (fl) { fl.classList.add('show'); }
-  setTimeout(() => renderPronosTab(), 400);
+  setTimeout(() => {
+    renderPronosTab();
+    // Open the accordion after render
+    setTimeout(() => {
+      const accordId = 'acc-' + matchKey;
+      const accord = document.getElementById(accordId);
+      if (accord) {
+        const toggle = accord.querySelector('.npo-toggle');
+        const content = accord.querySelector('.npo-content');
+        if (toggle && content) {
+          toggle.classList.add('open');
+          content.classList.add('show');
+        }
+      }
+    }, 100);
+  }, 400);
 }
 
 // ══════════════════════════════════════════
@@ -1429,7 +1623,7 @@ function buildDetailHTML(uid) {
       const mu = `<span style="color:${correct?'var(--green)':'var(--red)'};font-weight:700">${esc(winAbbr)}</span> <span style="color:var(--muted2);font-size:.65rem">${esc(loseAbbr)}</span>`;
 
       html += `<div class="lbd-match ${state}">
-        <div class="lbd-cell c-num">${icon}</div>
+        <div class="lbd-cell c-num">G${item.matchNum}</div>
         <div class="lbd-cell c-match">
           <span class="lbd-matchup-str">${mu}</span>
           <span class="lbd-score-str">${maxS}–${minS} · ${esc(pickAbbr)}</span>
@@ -1454,9 +1648,36 @@ function toast(msg) {
   setTimeout(() => el.classList.remove('show'), 3000);
 }
 
+function toggleNewPlayer() {
+  const form = document.getElementById('new-player-form');
+  const arrow = document.getElementById('toggle-arrow');
+  form.classList.toggle('open');
+  arrow.classList.toggle('open');
+  if (form.classList.contains('open')) {
+    document.getElementById('inp-pseudo').focus();
+  }
+}
+
 // ══════════════════════════════════════════
 //  BOOT
 // ══════════════════════════════════════════
+
+
+
+
+// Position tabs right below fixed header
+function positionTabs() {
+  const header = document.querySelector('.app-header');
+  const tabs = document.querySelector('.app-tabs');
+  const appContent = document.querySelector('.app-content');
+  if (!header || !tabs) return;
+  const headerH = header.getBoundingClientRect().height;
+  tabs.style.top = headerH + 'px';
+  if (appContent) appContent.style.paddingTop = (headerH + tabs.getBoundingClientRect().height + 20) + 'px';
+}
+window.addEventListener('load', positionTabs);
+window.addEventListener('resize', positionTabs);
+
 if (IS_DEV) document.getElementById('dev-badge').style.display = 'inline';
 document.getElementById('inp-pseudo').addEventListener('keydown', e => { if(e.key==='Enter') { e.preventDefault(); loginNew(); } });
 initLogin();
